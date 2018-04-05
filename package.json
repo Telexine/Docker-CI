@@ -1,0 +1,35 @@
+{
+  "name": "docker-ci",
+  "version": "1.0.0",
+  "description": "docker powered express CI",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://Telexine@github.com/Telexine/Docker-CI.git"
+  },
+  "keywords": [
+    "CI",
+    "docker"
+  ],
+  "author": "Telexine",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Telexine/Docker-CI/issues"
+  },
+  "homepage": "https://github.com/Telexine/Docker-CI#readme",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "jade": "^1.11.0",
+    "mongodb": "^3.0.5",
+    "path": "^0.12.7",
+    "pug": "^2.0.3",
+    "winston": "^2.4.1"
+  }
+}
