@@ -31,8 +31,10 @@ app.use('/public',express.static('public'));
 app.use('/node_modules',express.static('node_modules'));
 
 app.get("/", function (req, res) {
-  res.render('index', { title: 'Hey', message: 'Hello there!' })
 
+  res.render('index', { title: 'Hey', message: 'Hello there!' })
+ 
+ 
 })
 
 
