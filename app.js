@@ -9,11 +9,12 @@ var fs = require('fs');
 var router = express.Router();
 var pug = require('pug');
 
+
 //file handler
 const fileUpload = require('express-fileupload');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-
+const engine = require('./engine/telexine')
 
 /**\
  *
@@ -26,7 +27,7 @@ const exec = util.promisify(require('child_process').exec);
 
 
 
-
+engine.initializeMongo();
 
 app.set('view engine', 'pug')
 app.set("views", path.join(__dirname, "layouts"));
