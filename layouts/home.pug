@@ -705,12 +705,142 @@ html
 						// END SIDEBAR MENU
 					// END SIDEBAR
 				.page-fixed-main-content
-					// BEGIN PAGE BASE CONTENT
-					.note.note-info
+					// **** BEGIN PAGE BASE CONTENT****
+					.note.c
 
-						form#uploadForm(ref='uploadForm', action='http://localhost:3333/api/upload', method='post', enctype='multipart/form-data')
-							input(type='file', name='sampleFile')
-							input(type='submit', value='Upload!')
+
+
+						#form_wizard_1.portlet.light.bordered
+							.portlet-title
+								.caption
+									i.icon-layers.font-red
+									span.caption-subject.font-red.bold.uppercase
+										| Ci Wizard -
+										span.step-title  Step 1 of 4 
+								.actions
+									a.btn.btn-circle.btn-icon-only.btn-default(href='javascript:;')
+										i.icon-cloud-upload
+									a.btn.btn-circle.btn-icon-only.btn-default(href='javascript:;')
+										i.icon-wrench
+									a.btn.btn-circle.btn-icon-only.btn-default(href='javascript:;')
+										i.icon-trash
+							.portlet-body.form
+								form#submit_form.form-horizontal(action='#', method='POST')
+									.form-wizard
+										.form-body
+											ul.nav.nav-pills.nav-justified.steps
+												li
+													a.step(href='#tab1', data-toggle='tab')
+														span.number  1 
+														span.desc
+															i.fa.fa-check
+															| Project  Setup
+												li
+													a.step(href='#tab2', data-toggle='tab')
+														span.number  2 
+														span.desc
+															i.fa.fa-check
+															|  Upload
+												li
+													a.step.active(href='#tab3', data-toggle='tab')
+														span.number  3 
+														span.desc
+															i.fa.fa-check
+															|  Build
+												li
+													a.step(href='#tab4', data-toggle='tab')
+														span.number  4 
+														span.desc
+															i.fa.fa-check
+															|  Confirm
+											#bar.progress.progress-striped(role='progressbar')
+												.progress-bar.progress-bar-success  
+											.tab-content
+												.alert.alert-danger.display-none
+													button.close(data-dismiss='alert')
+													|  You have some form errors. Please check below.
+												.alert.alert-success.display-none
+													button.close(data-dismiss='alert')
+													|  Your form validation is successful!
+												#tab1.tab-pane.active
+													h3.block Provide your Project details
+													.form-group
+														label.control-label.col-md-3
+															| Project Name
+															span.required  * 
+														.col-md-4
+															input.form-control(type='text', name='Project',minlength="3", required='' )
+															span.help-block
+													
+													.form-group.form-md-checkboxes
+														label.control-label.col-md-3 
+															| Service Select
+														.md-checkbox-inline
+															.md-checkbox.has-success
+																input#checkboxNodeJS.md-check(type='checkbox', checked='')
+																label(for='checkboxNodeJS')
+																	span.check
+																	span.box
+																	|  Node JS
+															.md-checkbox.has-error
+																input#checkboxMongod.md-check(type='checkbox')
+																label(for='checkboxMongod')
+																	span
+																	span.check
+																	span.box
+																	|  Mongodb
+															.md-checkbox.has-info
+																input#checkboxMysql.md-check(type='checkbox')
+																label(for='checkboxMysql')
+																	span
+																	span.check
+																	span.box
+																	|  My sql
+
+														.form-group
+															.col-md-12(style='padding:20px')
+																form(action='/api/upload', method='post', enctype='multipart/form-data', style='display:none')
+																form#myAwesomeDropzone.dropzone.dropzone-file-area.dz-clickable(action='/api/upload', method='post', enctype='multipart/form-data', required='')
+																	h3 Drop your Project here
+																	h5 File much less than 50 MB
+																	.fallback
+																		input(name='file', type='file', required='')
+												#tab2.tab-pane
+													h3.block Provide your profile details
+													.form-group
+														label.control-label.col-md-3
+															| Service Options
+															span.required  * 
+														.col-md-4
+															.checkbox-list
+																label
+																	input(type='checkbox', name='payment[]', value='1', data-title='Auto-Pay with this Credit Card.')
+																	|  Auto-Pay with this Credit Card
+																label
+																	input(type='checkbox', name='payment[]', value='2', data-title='Email me monthly billing.')
+																	|  Email me monthly billing
+															#form_payment_error  
+												#tab4.tab-pane
+													h3.block Confirm your account
+													h4.form-section Account
+										.form-actions
+											.row
+												.col-md-offset-3.col-md-9
+													a.btn.default.button-previous(href='javascript:;')
+														i.fa.fa-angle-left
+														|  Back
+													a.btn.btn-outline.green.button-next(href='javascript:;')
+														| Continue
+														i.fa.fa-angle-right
+													a.btn.green.button-submit(href='javascript:;')
+														| Submit
+														i.fa.fa-check
+											
+
+
+
+
+
 
 						p
 							| A black page template with a minimal dependency assets to use as a base for any custom page you create

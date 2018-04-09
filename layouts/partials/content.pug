@@ -3,9 +3,10 @@ html
             // BEGIN PAGE BASE CONTENT
             .note.note-info
 
-                form#uploadForm(ref='uploadForm', action='http://localhost:3333/api/upload', method='post', enctype='multipart/form-data')
-                    input(type='file', name='sampleFile')
-                    input(type='submit', value='Upload!')
+                form#my-awesome-dropzone.dropzone(ref='uploadForm', action='/api/upload', method='post', enctype='multipart/form-data')
+                    .fallback
+                        input(type='file', name='file')
+                        input(type='submit', value='Upload!')
 
                 p
                     | A black page template with a minimal dependency assets to use as a base for any custom page you create

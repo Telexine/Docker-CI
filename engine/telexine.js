@@ -18,7 +18,7 @@ Unit_test = exports.Unit_test = mongoose.model('Unit_test', CISchema);
 
 exports.initializeMongo = function() {
  
-    console.log('init mongo container/n===============/n');
+    console.log('\n\n===================\ninit mongo container\n===================\n\n');
     //build  docker
     exec('docker-compose  -f ./engine/docker-compose.yml build', (error, stdout, stderr) => {
      
@@ -29,9 +29,6 @@ exports.initializeMongo = function() {
             if(error){
                 console.log('can\'t  run');
             }
-    
-    
-
             mongoose.connect(DATABASE_CONECTION);
   
             console.log('Trying to connect to ' + DATABASE_CONECTION);

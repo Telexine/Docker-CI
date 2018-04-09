@@ -67,7 +67,7 @@ router.post('/upload', function(req, res) {
   if (!req.files)
     return res.status(400).send('No files were uploaded.');
   
-  let sampleFile = req.files.sampleFile;
+  let sampleFile = req.files.file;
   let filename =  Date.now()+".zip";
    
   sampleFile.mv(__dirname+'/uploads/project/'+ filename, function(err) {
