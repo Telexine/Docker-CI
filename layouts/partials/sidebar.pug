@@ -1,0 +1,705 @@
+// BEGIN CONTAINER
+.container-fluid
+    .page-content.page-content-popup
+        .page-content-fixed-header
+            // BEGIN BREADCRUMBS
+            ul.page-breadcrumb
+                li
+                    a(href='#') Blank Page
+                li
+                    a(href='#') Page Layouts
+                li Blank Page Layout
+            // END BREADCRUMBS
+            .content-header-menu
+                // BEGIN DROPDOWN AJAX MENU
+                .dropdown-ajax-menu.btn-group
+                    button.btn.dropdown-toggle(type='button', data-toggle='dropdown', data-hover='dropdown', data-close-others='true')
+                        i.fa.fa-circle
+                        i.fa.fa-circle
+                        i.fa.fa-circle
+                    ul.dropdown-menu-v2
+                        li
+                            a(href='start.html') Application
+                        li
+                            a(href='start.html') Reports
+                        li
+                            a(href='start.html') Templates
+                        li
+                            a(href='start.html') Settings
+                // END DROPDOWN AJAX MENU
+                // BEGIN MENU TOGGLER
+                button.menu-toggler.responsive-toggler(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+                    span.toggle-icon
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                // END MENU TOGGLER
+        .page-sidebar-wrapper
+            // BEGIN SIDEBAR
+            // DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing
+            // DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed
+            .page-sidebar.navbar-collapse.collapse
+                // BEGIN SIDEBAR MENU
+                // DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders)
+                // DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode
+                // DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode
+                // DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing
+                // DOC: Set data-keep-expand="true" to keep the submenues expanded
+                // DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed
+                ul.page-sidebar-menu.page-header-fixed(data-keep-expanded='false', data-auto-scroll='true', data-slide-speed='200')
+                    li.nav-item.start
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-home
+                            span.title Dashboard
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item.start
+                                a.nav-link(href='index.html')
+                                    i.icon-bar-chart
+                                    span.title Dashboard 1
+                            li.nav-item.start
+                                a.nav-link(href='dashboard_2.html')
+                                    i.icon-bulb
+                                    span.title Dashboard 2
+                                    span.badge.badge-success 1
+                            li.nav-item.start
+                                a.nav-link(href='dashboard_3.html')
+                                    i.icon-graph
+                                    span.title Dashboard 3
+                                    span.badge.badge-danger 5
+                    li.heading
+                        h3.uppercase Features
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-diamond
+                            span.title UI Features
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='ui_metronic_grid.html')
+                                    span.title Metronic Grid System
+                            li.nav-item
+                                a.nav-link(href='ui_colors.html')
+                                    span.title Color Library
+                            li.nav-item
+                                a.nav-link(href='ui_general.html')
+                                    span.title General Components
+                            li.nav-item
+                                a.nav-link(href='ui_buttons.html')
+                                    span.title Buttons
+                            li.nav-item
+                                a.nav-link(href='ui_buttons_spinner.html')
+                                    span.title Spinner Buttons
+                            li.nav-item
+                                a.nav-link(href='ui_confirmations.html')
+                                    span.title Popover Confirmations
+                            li.nav-item
+                                a.nav-link(href='ui_sweetalert.html')
+                                    span.title Bootstrap Sweet Alerts
+                            li.nav-item
+                                a.nav-link(href='ui_icons.html')
+                                    span.title Font Icons
+                            li.nav-item
+                                a.nav-link(href='ui_socicons.html')
+                                    span.title Social Icons
+                            li.nav-item
+                                a.nav-link(href='ui_typography.html')
+                                    span.title Typography
+                            li.nav-item
+                                a.nav-link(href='ui_tabs_accordions_navs.html')
+                                    span.title Tabs, Accordions & Navs
+                            li.nav-item
+                                a.nav-link(href='ui_timeline.html')
+                                    span.title Timeline 1
+                            li.nav-item
+                                a.nav-link(href='ui_timeline_2.html')
+                                    span.title Timeline 2
+                            li.nav-item
+                                a.nav-link(href='ui_timeline_horizontal.html')
+                                    span.title Horizontal Timeline
+                            li.nav-item
+                                a.nav-link(href='ui_tree.html')
+                                    span.title Tree View
+                            li.nav-item
+                                a.nav-link.nav-toggle(href='javascript:;')
+                                    span.title Page Progress Bar
+                                    span.arrow
+                                ul.sub-menu
+                                    li.nav-item
+                                        a.nav-link(href='ui_page_progress_style_1.html')  Flash
+                                    li.nav-item
+                                        a.nav-link(href='ui_page_progress_style_2.html')  Big Counter
+                            li.nav-item
+                                a.nav-link(href='ui_blockui.html')
+                                    span.title Block UI
+                            li.nav-item
+                                a.nav-link(href='ui_bootstrap_growl.html')
+                                    span.title Bootstrap Growl Notifications
+                            li.nav-item
+                                a.nav-link(href='ui_notific8.html')
+                                    span.title Notific8 Notifications
+                            li.nav-item
+                                a.nav-link(href='ui_toastr.html')
+                                    span.title Toastr Notifications
+                            li.nav-item
+                                a.nav-link(href='ui_bootbox.html')
+                                    span.title Bootbox Dialogs
+                            li.nav-item
+                                a.nav-link(href='ui_alerts_api.html')
+                                    span.title Metronic Alerts API
+                            li.nav-item
+                                a.nav-link(href='ui_session_timeout.html')
+                                    span.title Session Timeout
+                            li.nav-item
+                                a.nav-link(href='ui_idle_timeout.html')
+                                    span.title User Idle Timeout
+                            li.nav-item
+                                a.nav-link(href='ui_modals.html')
+                                    span.title Modals
+                            li.nav-item
+                                a.nav-link(href='ui_extended_modals.html')
+                                    span.title Extended Modals
+                            li.nav-item
+                                a.nav-link(href='ui_tiles.html')
+                                    span.title Tiles
+                            li.nav-item
+                                a.nav-link(href='ui_datepaginator.html')
+                                    span.title Date Paginator
+                            li.nav-item
+                                a.nav-link(href='ui_nestable.html')
+                                    span.title Nestable List
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-puzzle
+                            span.title Components
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='components_date_time_pickers.html')
+                                    span.title Date & Time Pickers
+                            li.nav-item
+                                a.nav-link(href='components_color_pickers.html')
+                                    span.title Color Pickers
+                                    span.badge.badge-danger 2
+                            li.nav-item
+                                a.nav-link(href='components_select2.html')
+                                    span.title Select2 Dropdowns
+                            li.nav-item
+                                a.nav-link(href='components_bootstrap_select.html')
+                                    span.title Bootstrap Select
+                            li.nav-item
+                                a.nav-link(href='components_multi_select.html')
+                                    span.title Bootstrap Multiple Select
+                            li.nav-item
+                                a.nav-link(href='components_bootstrap_multiselect_dropdown.html')
+                                    span.title Bootstrap Multiselect Dropdowns
+                            li.nav-item
+                                a.nav-link(href='components_bootstrap_select_splitter.html')
+                                    span.title Select Splitter
+                            li.nav-item
+                                a.nav-link(href='components_clipboard.html')
+                                    span.title Clipboard
+                            li.nav-item
+                                a.nav-link(href='components_typeahead.html')
+                                    span.title Typeahead Autocomplete
+                            li.nav-item
+                                a.nav-link(href='components_bootstrap_tagsinput.html')
+                                    span.title Bootstrap Tagsinput
+                            li.nav-item
+                                a.nav-link(href='components_bootstrap_switch.html')
+                                    span.title Bootstrap Switch
+                                    span.badge.badge-success 6
+                            li.nav-item
+                                a.nav-link(href='components_bootstrap_maxlength.html')
+                                    span.title Bootstrap Maxlength
+                            li.nav-item
+                                a.nav-link(href='components_bootstrap_fileinput.html')
+                                    span.title Bootstrap File Input
+                            li.nav-item
+                                a.nav-link(href='components_bootstrap_touchspin.html')
+                                    span.title Bootstrap Touchspin
+                            li.nav-item
+                                a.nav-link(href='components_form_tools.html')
+                                    span.title Form Widgets & Tools
+                            li.nav-item
+                                a.nav-link(href='components_context_menu.html')
+                                    span.title Context Menu
+                            li.nav-item
+                                a.nav-link(href='components_editors.html')
+                                    span.title Markdown & WYSIWYG Editors
+                            li.nav-item
+                                a.nav-link(href='components_code_editors.html')
+                                    span.title Code Editors
+                            li.nav-item
+                                a.nav-link(href='components_ion_sliders.html')
+                                    span.title Ion Range Sliders
+                            li.nav-item
+                                a.nav-link(href='components_noui_sliders.html')
+                                    span.title NoUI Range Sliders
+                            li.nav-item
+                                a.nav-link(href='components_knob_dials.html')
+                                    span.title Knob Circle Dials
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-settings
+                            span.title Form Stuff
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='form_controls.html')
+                                    span.title
+                                        | Bootstrap Form
+                                        br
+                                        | Controls
+                            li.nav-item
+                                a.nav-link(href='form_controls_md.html')
+                                    span.title
+                                        | Material Design
+                                        br
+                                        | Form Controls
+                            li.nav-item
+                                a.nav-link(href='form_validation.html')
+                                    span.title Form Validation
+                            li.nav-item
+                                a.nav-link(href='form_validation_states_md.html')
+                                    span.title
+                                        | Material Design
+                                        br
+                                        | Form Validation States
+                            li.nav-item
+                                a.nav-link(href='form_validation_md.html')
+                                    span.title
+                                        | Material Design
+                                        br
+                                        | Form Validation
+                            li.nav-item
+                                a.nav-link(href='form_layouts.html')
+                                    span.title Form Layouts
+                            li.nav-item
+                                a.nav-link(href='form_repeater.html')
+                                    span.title Form Repeater
+                            li.nav-item
+                                a.nav-link(href='form_input_mask.html')
+                                    span.title Form Input Mask
+                            li.nav-item
+                                a.nav-link(href='form_editable.html')
+                                    span.title Form X-editable
+                            li.nav-item
+                                a.nav-link(href='form_wizard.html')
+                                    span.title Form Wizard
+                            li.nav-item
+                                a.nav-link(href='form_icheck.html')
+                                    span.title iCheck Controls
+                            li.nav-item
+                                a.nav-link(href='form_image_crop.html')
+                                    span.title Image Cropping
+                            li.nav-item
+                                a.nav-link(href='form_fileupload.html')
+                                    span.title Multiple File Upload
+                            li.nav-item
+                                a.nav-link(href='form_dropzone.html')
+                                    span.title Dropzone File Upload
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-bulb
+                            span.title Elements
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='elements_steps.html')
+                                    span.title Steps
+                            li.nav-item
+                                a.nav-link(href='elements_lists.html')
+                                    span.title Lists
+                            li.nav-item
+                                a.nav-link(href='elements_ribbons.html')
+                                    span.title Ribbons
+                            li.nav-item
+                                a.nav-link(href='elements_overlay.html')
+                                    span.title Overlays
+                            li.nav-item
+                                a.nav-link(href='elements_cards.html')
+                                    span.title User Cards
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-briefcase
+                            span.title Tables
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='table_static_basic.html')
+                                    span.title Basic Tables
+                            li.nav-item
+                                a.nav-link(href='table_static_responsive.html')
+                                    span.title Responsive Tables
+                            li.nav-item
+                                a.nav-link(href='table_bootstrap.html')
+                                    span.title Bootstrap Tables
+                            li.nav-item
+                                a.nav-link.nav-toggle(href='javascript:;')
+                                    span.title Datatables
+                                    span.arrow
+                                ul.sub-menu
+                                    li.nav-item
+                                        a.nav-link(href='table_datatables_managed.html')  Managed Datatables
+                                    li.nav-item
+                                        a.nav-link(href='table_datatables_buttons.html')  Buttons Extension
+                                    li.nav-item
+                                        a.nav-link(href='table_datatables_colreorder.html')  Colreorder Extension
+                                    li.nav-item
+                                        a.nav-link(href='table_datatables_rowreorder.html')  Rowreorder Extension
+                                    li.nav-item
+                                        a.nav-link(href='table_datatables_scroller.html')  Scroller Extension
+                                    li.nav-item
+                                        a.nav-link(href='table_datatables_fixedheader.html')  FixedHeader Extension
+                                    li.nav-item
+                                        a.nav-link(href='table_datatables_responsive.html')  Responsive Extension
+                                    li.nav-item
+                                        a.nav-link(href='table_datatables_editable.html')  Editable Datatables
+                                    li.nav-item
+                                        a.nav-link(href='table_datatables_ajax.html')  Ajax Datatables
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='?p=')
+                            i.icon-wallet
+                            span.title Portlets
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='portlet_boxed.html')
+                                    span.title Boxed Portlets
+                            li.nav-item
+                                a.nav-link(href='portlet_light.html')
+                                    span.title Light Portlets
+                            li.nav-item
+                                a.nav-link(href='portlet_solid.html')
+                                    span.title Solid Portlets
+                            li.nav-item
+                                a.nav-link(href='portlet_ajax.html')
+                                    span.title Ajax Portlets
+                            li.nav-item
+                                a.nav-link(href='portlet_draggable.html')
+                                    span.title Draggable Portlets
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-bar-chart
+                            span.title Charts
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='charts_amcharts.html')
+                                    span.title amChart
+                            li.nav-item
+                                a.nav-link(href='charts_flotcharts.html')
+                                    span.title Flot Charts
+                            li.nav-item
+                                a.nav-link(href='charts_flowchart.html')
+                                    span.title Flow Charts
+                            li.nav-item
+                                a.nav-link(href='charts_google.html')
+                                    span.title Google Charts
+                            li.nav-item
+                                a.nav-link(href='charts_echarts.html')
+                                    span.title eCharts
+                            li.nav-item
+                                a.nav-link(href='charts_morris.html')
+                                    span.title Morris Charts
+                            li.nav-item
+                                a.nav-link.nav-toggle(href='javascript:;')
+                                    span.title HighCharts
+                                    span.arrow
+                                ul.sub-menu
+                                    li.nav-item
+                                        a.nav-link(href='charts_highcharts.html')  HighCharts
+                                    li.nav-item
+                                        a.nav-link(href='charts_highstock.html')  HighStock
+                                    li.nav-item
+                                        a.nav-link(href='charts_highmaps.html')  HighMaps
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-pointer
+                            span.title Maps
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='maps_google.html')
+                                    span.title Google Maps
+                            li.nav-item
+                                a.nav-link(href='maps_vector.html')
+                                    span.title Vector Maps
+                    li.heading
+                        h3.uppercase Layouts
+                    li.nav-item.active.open
+                        a.nav-link(href='layout_blank_page.html')
+                            i.icon-layers
+                            span.title Blank Page
+                            span.selected
+                    li.heading
+                        h3.uppercase Pages
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-basket
+                            span.title eCommerce
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='ecommerce_index.html')
+                                    i.icon-home
+                                    span.title Dashboard
+                            li.nav-item
+                                a.nav-link(href='ecommerce_orders.html')
+                                    i.icon-basket
+                                    span.title Orders
+                            li.nav-item
+                                a.nav-link(href='ecommerce_orders_view.html')
+                                    i.icon-tag
+                                    span.title Order View
+                            li.nav-item
+                                a.nav-link(href='ecommerce_products.html')
+                                    i.icon-graph
+                                    span.title Products
+                            li.nav-item
+                                a.nav-link(href='ecommerce_products_edit.html')
+                                    i.icon-graph
+                                    span.title Product Edit
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-docs
+                            span.title Apps
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='app_todo.html')
+                                    i.icon-clock
+                                    span.title Todo 1
+                            li.nav-item
+                                a.nav-link(href='app_todo_2.html')
+                                    i.icon-check
+                                    span.title Todo 2
+                            li.nav-item
+                                a.nav-link(href='app_inbox.html')
+                                    i.icon-envelope
+                                    span.title Inbox
+                            li.nav-item
+                                a.nav-link(href='app_calendar.html')
+                                    i.icon-calendar
+                                    span.title Calendar
+                            li.nav-item
+                                a.nav-link(href='app_ticket.html')
+                                    i.icon-notebook
+                                    span.title Support
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-user
+                            span.title User
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='page_user_profile_1.html')
+                                    i.icon-user
+                                    span.title Profile 1
+                            li.nav-item
+                                a.nav-link(href='page_user_profile_1_account.html')
+                                    i.icon-user-female
+                                    span.title Profile 1 Account
+                            li.nav-item
+                                a.nav-link(href='page_user_profile_1_help.html')
+                                    i.icon-user-following
+                                    span.title Profile 1 Help
+                            li.nav-item
+                                a.nav-link(href='page_user_profile_2.html')
+                                    i.icon-users
+                                    span.title Profile 2
+                            li.nav-item
+                                a.nav-link.nav-toggle(href='javascript:;')
+                                    i.icon-notebook
+                                    span.title Login
+                                    span.arrow
+                                ul.sub-menu
+                                    li.nav-item
+                                        a.nav-link(href='page_user_login_1.html', target='_blank')  Login Page 1
+                                    li.nav-item
+                                        a.nav-link(href='page_user_login_2.html', target='_blank')  Login Page 2
+                                    li.nav-item
+                                        a.nav-link(href='page_user_login_3.html', target='_blank')  Login Page 3
+                                    li.nav-item
+                                        a.nav-link(href='page_user_login_4.html', target='_blank')  Login Page 4
+                                    li.nav-item
+                                        a.nav-link(href='page_user_login_5.html', target='_blank')  Login Page 5
+                                    li.nav-item
+                                        a.nav-link(href='page_user_login_6.html', target='_blank')  Login Page 6
+                            li.nav-item
+                                a.nav-link(href='page_user_lock_1.html', target='_blank')
+                                    i.icon-lock
+                                    span.title Lock Screen 1
+                            li.nav-item
+                                a.nav-link(href='page_user_lock_2.html', target='_blank')
+                                    i.icon-lock-open
+                                    span.title Lock Screen 2
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-social-dribbble
+                            span.title General
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='page_general_about.html')
+                                    i.icon-info
+                                    span.title About
+                            li.nav-item
+                                a.nav-link(href='page_general_contact.html')
+                                    i.icon-call-end
+                                    span.title Contact
+                            li.nav-item
+                                a.nav-link.nav-toggle(href='javascript:;')
+                                    i.icon-notebook
+                                    span.title Portfolio
+                                    span.arrow
+                                ul.sub-menu
+                                    li.nav-item
+                                        a.nav-link(href='page_general_portfolio_1.html')  Portfolio 1
+                                    li.nav-item
+                                        a.nav-link(href='page_general_portfolio_2.html')  Portfolio 2
+                                    li.nav-item
+                                        a.nav-link(href='page_general_portfolio_3.html')  Portfolio 3
+                                    li.nav-item
+                                        a.nav-link(href='page_general_portfolio_4.html')  Portfolio 4
+                            li.nav-item
+                                a.nav-link.nav-toggle(href='javascript:;')
+                                    i.icon-magnifier
+                                    span.title Search
+                                    span.arrow
+                                ul.sub-menu
+                                    li.nav-item
+                                        a.nav-link(href='page_general_search.html')  Search 1
+                                    li.nav-item
+                                        a.nav-link(href='page_general_search_2.html')  Search 2
+                                    li.nav-item
+                                        a.nav-link(href='page_general_search_3.html')  Search 3
+                                    li.nav-item
+                                        a.nav-link(href='page_general_search_4.html')  Search 4
+                                    li.nav-item
+                                        a.nav-link(href='page_general_search_5.html')  Search 5
+                            li.nav-item
+                                a.nav-link(href='page_general_pricing.html')
+                                    i.icon-tag
+                                    span.title Pricing
+                            li.nav-item
+                                a.nav-link(href='page_general_pricing_2.html')
+                                    i.icon-tag
+                                    span.title Pricing 2
+                            li.nav-item
+                                a.nav-link(href='page_general_faq.html')
+                                    i.icon-wrench
+                                    span.title FAQ
+                            li.nav-item
+                                a.nav-link(href='page_general_blog.html')
+                                    i.icon-pencil
+                                    span.title Blog
+                            li.nav-item
+                                a.nav-link(href='page_general_blog_post.html')
+                                    i.icon-note
+                                    span.title Blog Post
+                            li.nav-item
+                                a.nav-link(href='page_general_invoice.html')
+                                    i.icon-envelope
+                                    span.title Invoice
+                            li.nav-item
+                                a.nav-link(href='page_general_invoice_2.html')
+                                    i.icon-envelope
+                                    span.title Invoice 2
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-settings
+                            span.title System
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link(href='page_cookie_consent_1.html')
+                                    span.title Cookie Consent 1
+                            li.nav-item
+                                a.nav-link(href='page_cookie_consent_2.html')
+                                    span.title Cookie Consent 2
+                            li.nav-item
+                                a.nav-link(href='page_system_coming_soon.html', target='_blank')
+                                    span.title Coming Soon
+                            li.nav-item
+                                a.nav-link(href='page_system_404_1.html')
+                                    span.title 404 Page 1
+                            li.nav-item
+                                a.nav-link(href='page_system_404_2.html', target='_blank')
+                                    span.title 404 Page 2
+                            li.nav-item
+                                a.nav-link(href='page_system_404_3.html', target='_blank')
+                                    span.title 404 Page 3
+                            li.nav-item
+                                a.nav-link(href='page_system_500_1.html')
+                                    span.title 500 Page 1
+                            li.nav-item
+                                a.nav-link(href='page_system_500_2.html', target='_blank')
+                                    span.title 500 Page 2
+                    li.nav-item
+                        a.nav-link.nav-toggle(href='javascript:;')
+                            i.icon-folder
+                            span.title Multi Level Menu
+                            span.arrow
+                        ul.sub-menu
+                            li.nav-item
+                                a.nav-link.nav-toggle(href='javascript:;')
+                                    i.icon-settings
+                                    |  Item 1
+                                    span.arrow
+                                ul.sub-menu
+                                    li.nav-item
+                                        a.nav-link(href='?p=dashboard-2', target='_blank')
+                                            i.icon-user
+                                            |  Arrow Toggle
+                                            span.arrow.nav-toggle
+                                        ul.sub-menu
+                                            li.nav-item
+                                                a.nav-link(href='#')
+                                                    i.icon-power
+                                                    |  Sample Link 1
+                                            li.nav-item
+                                                a.nav-link(href='#')
+                                                    i.icon-paper-plane
+                                                    |  Sample Link 1
+                                            li.nav-item
+                                                a.nav-link(href='#')
+                                                    i.icon-star
+                                                    |  Sample Link 1
+                                    li.nav-item
+                                        a.nav-link(href='#')
+                                            i.icon-camera
+                                            |  Sample Link 1
+                                    li.nav-item
+                                        a.nav-link(href='#')
+                                            i.icon-link
+                                            |  Sample Link 2
+                                    li.nav-item
+                                        a.nav-link(href='#')
+                                            i.icon-pointer
+                                            |  Sample Link 3
+                            li.nav-item
+                                a.nav-link(href='?p=dashboard-2', target='_blank')
+                                    i.icon-globe
+                                    |  Arrow Toggle
+                                    span.arrow.nav-toggle
+                                ul.sub-menu
+                                    li.nav-item
+                                        a.nav-link(href='#')
+                                            i.icon-tag
+                                            |  Sample Link 1
+                                    li.nav-item
+                                        a.nav-link(href='#')
+                                            i.icon-pencil
+                                            |  Sample Link 1
+                                    li.nav-item
+                                        a.nav-link(href='#')
+                                            i.icon-graph
+                                            |  Sample Link 1
+                            li.nav-item
+                                a.nav-link(href='#')
+                                    i.icon-bar-chart
+                                    |  Item 3
+                // END SIDEBAR MENU
+            // END SIDEBAR

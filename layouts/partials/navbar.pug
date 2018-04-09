@@ -1,0 +1,133 @@
+body.page-md
+    // BEGIN HEADER
+    header.page-header
+        nav.navbar(role='navigation')
+            .container-fluid
+                .havbar-header
+                    // BEGIN LOGO
+                    a#index.navbar-brand(href='start.html')
+                        img(src='public/assets/layouts/layout6/img/logo.png', alt='Logo')
+                    // END LOGO
+                    // BEGIN TOPBAR ACTIONS
+                    .topbar-actions
+                        // DOC: Apply "search-form-expanded" right after the "search-form" class to have half expanded search box
+                        form.search-form(action='extra_search.html', method='GET')
+                            .input-group
+                                input.form-control(type='text', placeholder='Search here', name='query')
+                                span.input-group-btn
+                                    a.btn.md-skip.submit(href='javascript:;')
+                                        i.fa.fa-search
+                        // END HEADER SEARCH BOX
+                        // BEGIN GROUP NOTIFICATION
+                        #header_notification_bar.btn-group-notification.btn-group
+                            button.btn.md-skip.dropdown-toggle(type='button', data-toggle='dropdown', data-hover='dropdown', data-close-others='true')
+                                span.badge 9
+                            ul.dropdown-menu-v2
+                                li.external
+                                    h3
+                                        span.bold 12 pending
+                                        |  notifications
+                                    a(href='#') view all
+                                li
+                                    ul.dropdown-menu-list.scroller(style='height: 250px; padding: 0;', data-handle-color='#637283')
+                                        li
+                                            a(href='javascript:;')
+                                                span.details
+                                                    span.label.label-sm.label-icon.label-success.md-skip
+                                                        i.fa.fa-plus
+                                                    |  New user registered.
+                                                span.time just now
+                                        li
+                                            a(href='javascript:;')
+                                                span.details
+                                                    span.label.label-sm.label-icon.label-danger.md-skip
+                                                        i.fa.fa-bolt
+                                                    |  Server #12 overloaded.
+                                                span.time 3 mins
+                                        li
+                                            a(href='javascript:;')
+                                                span.details
+                                                    span.label.label-sm.label-icon.label-warning.md-skip
+                                                        i.fa.fa-bell-o
+                                                    |  Server #2 not responding.
+                                                span.time 10 mins
+                                        li
+                                            a(href='javascript:;')
+                                                span.details
+                                                    span.label.label-sm.label-icon.label-info.md-skip
+                                                        i.fa.fa-bullhorn
+                                                    |  Application error.
+                                                span.time 14 hrs
+                                        li
+                                            a(href='javascript:;')
+                                                span.details
+                                                    span.label.label-sm.label-icon.label-danger.md-skip
+                                                        i.fa.fa-bolt
+                                                    |  Database overloaded 68%.
+                                                span.time 2 days
+                                        li
+                                            a(href='javascript:;')
+                                                span.details
+                                                    span.label.label-sm.label-icon.label-danger.md-skip
+                                                        i.fa.fa-bolt
+                                                    |  A user IP blocked.
+                                                span.time 3 days
+                                        li
+                                            a(href='javascript:;')
+                                                span.details
+                                                    span.label.label-sm.label-icon.label-warning.md-skip
+                                                        i.fa.fa-bell-o
+                                                    |  Storage Server #4 not responding dfdfdfd.
+                                                span.time 4 days
+                                        li
+                                            a(href='javascript:;')
+                                                span.details
+                                                    span.label.label-sm.label-icon.label-info.md-skip
+                                                        i.fa.fa-bullhorn
+                                                    |  System Error.
+                                                span.time 5 days
+                                        li
+                                            a(href='javascript:;')
+                                                span.details
+                                                    span.label.label-sm.label-icon.label-danger.md-skip
+                                                        i.fa.fa-bolt
+                                                    |  Storage server failed.
+                                                span.time 9 days
+                        // END GROUP NOTIFICATION
+                        // BEGIN USER PROFILE
+                        .btn-group-img.btn-group
+                            button.btn.btn-sm.dropdown-toggle(type='button', data-toggle='dropdown', data-hover='dropdown', data-close-others='true')
+                                img(src='public/assets/layouts/layout5/img/avatar1.jpg', alt='')
+                            ul.dropdown-menu-v2(role='menu')
+                                li
+                                    a(href='page_user_profile_1.html')
+                                        i.icon-user
+                                        |  My Profile
+                                        span.badge.badge-danger 1
+                                li
+                                    a(href='app_calendar.html')
+                                        i.icon-calendar
+                                        |  My Calendar
+                                li
+                                    a(href='app_inbox.html')
+                                        i.icon-envelope-open
+                                        |  My Inbox
+                                        span.badge.badge-danger  3
+                                li
+                                    a(href='app_todo_2.html')
+                                        i.icon-rocket
+                                        |  My Tasks
+                                        span.badge.badge-success  7
+                                li.divider
+                                li
+                                    a(href='page_user_lock_1.html')
+                                        i.icon-lock
+                                        |  Lock Screen
+                                li
+                                    a(href='page_user_login_1.html')
+                                        i.icon-key
+                                        |  Log Out
+                        // END USER PROFILE
+                    // END TOPBAR ACTIONS
+            // /container
+    // END HEADER

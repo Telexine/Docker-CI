@@ -1,0 +1,27 @@
+html
+        .page-fixed-main-content
+            // BEGIN PAGE BASE CONTENT
+            .note.note-info
+
+                form#uploadForm(ref='uploadForm', action='http://localhost:3333/api/upload', method='post', enctype='multipart/form-data')
+                    input(type='file', name='sampleFile')
+                    input(type='submit', value='Upload!')
+
+                p
+                    | A black page template with a minimal dependency assets to use as a base for any custom page you create
+            // END PAGE BASE CONTENT
+        // BEGIN FOOTER
+        p.copyright-v2
+            | 2016 © Metronic Theme By
+            a(target='_blank', href='http://keenthemes.com') Keenthemes
+            a(href='http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes', title='Purchase Metronic just for 27$ and get lifetime updates for free', target='_blank') Purchase Metronic!
+        // BEGIN QUICK SIDEBAR TOGGLER
+        button.quick-sidebar-toggler(type='button', data-toggle='collapse')
+            span.sr-only Toggle Quick Sidebar
+            i.icon-logout
+            .quick-sidebar-notification
+                span.badge.badge-danger 7
+        // END QUICK SIDEBAR TOGGLER
+        a.go2top(href='#index')
+            i.icon-arrow-up
+        // END FOOTER AINER
