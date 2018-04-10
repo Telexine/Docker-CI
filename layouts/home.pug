@@ -752,7 +752,7 @@ html
 														span.number  4 
 														span.desc
 															i.fa.fa-check
-															|  Confirm
+															|  result
 											#bar.progress.progress-striped(role='progressbar')
 												.progress-bar.progress-bar-success  
 											.tab-content
@@ -824,17 +824,23 @@ html
 																h5 File much less than 50 MB
 																.fallback
 																	input#projname(name='file', type='file', required='')
-															input#isupload.form-control(type='text', name='Project',minlength="3", required='',style='visibility:hidden' )
+															input#isupload.form-control(type='text', name='Project',minlength="3",style='visibility:hidden', required='' )
+												#tab3.tab-pane
+													h2.block Building
+														.col-md-12
+															.ldBar.label-center(data-preset="circle",data-stroke="#659be0",data-value='50',style="width:200px;height:200px;margin:auto")
+													h4.form-section status
+												
 												#tab4.tab-pane
 													h3.block Confirm your account
-													h4.form-section Account
+													h4.form-section Account												
 										.form-actions
 											.row
 												.col-md-offset-3.col-md-9
-													a.btn.default.button-previous(href='javascript:;')
+													a#btnback.btn.default.button-previous(href='javascript:;')
 														i.fa.fa-angle-left
 														|  Back
-													a.btn.btn-outline.green.button-next(href='javascript:;')
+													a#btncontinue.btn.btn-outline.green.button-next(href='javascript:;')
 														| Continue
 														i.fa.fa-angle-right
 													a.btn.green.button-submit(href='javascript:;')
