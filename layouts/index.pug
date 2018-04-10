@@ -11,20 +11,47 @@ html
             script(src='public/assets/pages/scripts/form-wizard.min.js', type='text/javascript')
             script(src='public/js/dropzone.js', type='text/javascript')
             script.
+                  let _file;
                   Dropzone.options.myAwesomeDropzone = {
-                        dictDefaultMessage: "",
-                        autoQueue: false,
+                        dictDefaultMessage: "or click here ",
+                        autoQueue: true,
+                        autoDiscover: false,
                         acceptedFiles: ".zip",
                         init: function() {
+                              myDropzone = this; // closure
+
+            
+
+
                               this.on("addedfile", function(file) { 
                                     if (this.files[1]!=null){
-                                    this.removeFile(this.files[0]);
-                                    }
+                                          this.removeFile(this.files[0]);
+                              }
+                                    
+
                               });
+                              this.on("sending", function(file, xhr, formData) {
+                              
+                                    formData.append("id", "uid1");
+                                    formData.append("proj", $('#projname').val()+"");
+
+                                    let service = '1,0,0' ; //$('#checkboxNodeJS').val();
+                                    formData.append("service", service);
+
+                                    console.log(formData);
+
+                               });
+
+                               this.on("success", function(file,res) {
+                                    console.log(res);
+                                    $('#isupload').val(res);
+                               });
+
                         },
+
                         uploadMultiple: false,
 
                         paramName: "file", // The name that will be used to transfer the file
-                        maxFilesize: 50 // MB
-   
+                        maxFilesize: 50, // MB
+
                   };

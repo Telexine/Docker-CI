@@ -66,16 +66,22 @@ router.get('/build' ,function (req, res) {
 router.post('/upload', function(req, res) {
   if (!req.files)
     return res.status(400).send('No files were uploaded.');
-  
+
+  let Id = req.body.id; // userid
+  let projectname = req.body.proj;
+  let service = req.body.service;  // "node,mango,mysql : 1,0,0"
   let sampleFile = req.files.file;
   let filename =  Date.now()+".zip";
-   
+
   sampleFile.mv(__dirname+'/uploads/project/'+ filename, function(err) {
     if (err)
       return res.status(500).send(err);
     
     zxfv(filename);
-    res.send('File uploaded!');
+    res.status(200);
+    res.send(filename);
+
+    
   });
 });
 
@@ -98,8 +104,10 @@ async function zxfv(filename) {
         }
         
         //file exist Extracting
+        thisPath = "uploads/project/"+filename;
+        thisTestPath = "uploads/project/testing/"+filename.replace(".zip","");
         if(stdout.replace(/(\r\n\t|\n|\r\t)/gm,"").includes(filename)){
-            cmd = 'unzip uploads/project/'+filename + ' -d  uploads/project/testing/'+filename.replace(".zip","") ;
+            cmd = 'unzip -j '+ thisPath+" -d "+ thisTestPath ;
 
             exec(cmd ,
              (error, stdout, stderr) => {
@@ -107,12 +115,42 @@ async function zxfv(filename) {
                         console.error(`exec error: ${error}`);
                         return;
                     }
+
+                    createDockerCompose(filename.replace(".zip",""),thisTestPath,100);
+                    exec('ls');
+                    exec('docker-compose up '+thisTestPath+'/docker-compose.yml');
             });
+          
+
+
         }
  
         //console.log(`stderr: ${stderr}`);
       });
  
+}
+let createDockerCompose = function(projectfolder,thisTestPath,services){
+
+// service 100 = node js 
+
+  //create docker file 
+  exec("touch "+thisTestPath+"/docker-compose.yml");
+  exec(` echo 'version: '4'
+  services:
+    ${projectfolder}:
+        image: nodejs-container
+        build: .
+        copy: . .
+        command:
+          - npm install
+          - node index.js
+        ports:
+          - "3003:3000"
+        volumes:
+          - .:/usr/src/app/${projectfolder}
+          - /usr/src/app/${projectfolder}/node_modules
+              
+' > ${thisTestPath}/docker-compose.yml`);
 }
 
 

@@ -769,7 +769,7 @@ html
 															| Project Name
 															span.required  * 
 														.col-md-4
-															input.form-control(type='text', name='Project',minlength="3", required='' )
+															input#projname.form-control(type='text', name='Project',minlength="3", required='' )
 															span.help-block
 													
 													.form-group.form-md-checkboxes
@@ -797,22 +797,16 @@ html
 																	span.box
 																	|  My sql
 
-														.form-group
-															.col-md-12(style='padding:20px')
-																form(action='/api/upload', method='post', enctype='multipart/form-data', style='display:none')
-																form#myAwesomeDropzone.dropzone.dropzone-file-area.dz-clickable(action='/api/upload', method='post', enctype='multipart/form-data', required='')
-																	h3 Drop your Project here
-																	h5 File much less than 50 MB
-																	.fallback
-																		input(name='file', type='file', required='')
+
 												#tab2.tab-pane
 													h3.block Provide your profile details
-													.form-group
+													.form-group(style='display:none')
 														label.control-label.col-md-3
 															| Service Options
 															span.required  * 
 														.col-md-4
 															.checkbox-list
+																
 																label
 																	input(type='checkbox', name='payment[]', value='1', data-title='Auto-Pay with this Credit Card.')
 																	|  Auto-Pay with this Credit Card
@@ -820,6 +814,17 @@ html
 																	input(type='checkbox', name='payment[]', value='2', data-title='Email me monthly billing.')
 																	|  Email me monthly billing
 															#form_payment_error  
+
+													.form-group
+														.col-md-12(style='padding:20px')
+															
+															form(required='',action='/api/upload', method='post', enctype='multipart/form-data', style='display:none')
+															form#myAwesomeDropzone.dropzone.dropzone-file-area.dz-clickable(action='/api/upload', method='post', enctype='multipart/form-data', required='')
+																h3 Drop your Project here
+																h5 File much less than 50 MB
+																.fallback
+																	input#projname(name='file', type='file', required='')
+															input#isupload.form-control(type='text', name='Project',minlength="3", required='',style='visibility:hidden' )
 												#tab4.tab-pane
 													h3.block Confirm your account
 													h4.form-section Account
@@ -1306,8 +1311,11 @@ html
 		script.
 			$(document).ready(function()
 			{
-			$('#clickmewow').click(function()
-			{
-			$('#radio1003').attr('checked', 'checked');
+				$('#clickmewow').click(function()
+					{
+					$('#radio1003').attr('checked', 'checked');
+				});
+
+				 
+
 			});
-			})
