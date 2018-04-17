@@ -1,13 +1,13 @@
 version: '3'
 services:
   web:
-    image: nodejs-container
+    image: "node:8.4.0-alpine"
     build: .
+    working_dir: /home/node/app
     ports:
       - "3000:3000"
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - .:/home/node/app
     depends_on:
       - "mongo"
   mongo:
@@ -17,6 +17,6 @@ services:
       - "27017:27017"
   adminmongo:
     image: "mrvautin/adminmongo"
-
     ports:
       - "1234:1234"
+  

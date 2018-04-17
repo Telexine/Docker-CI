@@ -9,6 +9,7 @@ var fs = require('fs');
 var router = express.Router();
 var pug = require('pug');
 
+var SSE = require('sse-nodejs');
 
 //file handler
 const fileUpload = require('express-fileupload');
@@ -52,13 +53,24 @@ app.get("/", function (req, res) {
 
 
 //API
+ 
 
 app.use('/api',router);
 
-router.get('/build' ,function (req, res) {
+router.get('/build/:buildID' ,function (req, res) {
+  var buildID = req.params.buildID;
+  var ev = SSE(res);
 
-    res.end('build');
-   
+  ev.sendEvent('console', function () {
+    return new Date
+  },1000);
+
+  ev.disconnect(function () {
+      console.log("disconnected");
+  });
+
+  ev.removeEvent('time',3100);
+
    
   })
 
@@ -74,19 +86,54 @@ router.post('/upload', function(req, res) {
   let filename =  Date.now()+".zip";
 
   sampleFile.mv(__dirname+'/uploads/project/'+ filename, function(err) {
-    if (err)
+    if (err){
       return res.status(500).send(err);
-    
-    zxfv(filename);
-    res.status(200);
-    res.send(filename);
+    }
+
+    exec('ls uploads/project', (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
+      
+      //file exist Extracting
+      console.log("file exist Extracting");
+      thisPath = "uploads/project/"+filename;
+      thisTestPath = "uploads/project/testing/"+filename.replace(".zip","");
+      if(stdout.replace(/(\r\n\t|\n|\r\t)/gm,"").includes(filename)){
+          cmd = 'unzip -j '+ thisPath+" -d "+ thisTestPath ;
+
+          exec(cmd ,
+           (error, stdout, stderr) => {
+                  if(error){
+                      console.error(`exec error: ${error}`);
+                      return;
+                  }
+
+                 // createDockerCompose(filename.replace(".zip",""),thisTestPath,100);
+                  
+                  //runNodeProject(thisTestPath);
+                  return res.status(200).send(filename.replace(".zip",""));
+                  //exec('docker-compose up '+thisTestPath+'/docker-compose.yml');
+          });
+        
+
+
+      }
+
+      //console.log(`stderr: ${stderr}`);
+    });
+
+
+
+
 
     
   });
 });
 
 
-
+let _workspace;
 // FILE operation
 //zxfv('1523120704998.zip');
 async function zxfv(filename) {
@@ -104,6 +151,7 @@ async function zxfv(filename) {
         }
         
         //file exist Extracting
+        console.log("file exist Extracting");
         thisPath = "uploads/project/"+filename;
         thisTestPath = "uploads/project/testing/"+filename.replace(".zip","");
         if(stdout.replace(/(\r\n\t|\n|\r\t)/gm,"").includes(filename)){
@@ -116,9 +164,14 @@ async function zxfv(filename) {
                         return;
                     }
 
-                    createDockerCompose(filename.replace(".zip",""),thisTestPath,100);
-                    exec('ls');
-                    exec('docker-compose up '+thisTestPath+'/docker-compose.yml');
+                   // createDockerCompose(filename.replace(".zip",""),thisTestPath,100);
+                    
+                    //runNodeProject(thisTestPath);
+                    console.log("path"+thisTestPath);
+                    _workspace= thisTestPath;
+                    return thisTestPath;
+
+                    //exec('docker-compose up '+thisTestPath+'/docker-compose.yml');
             });
           
 
@@ -129,16 +182,46 @@ async function zxfv(filename) {
       });
  
 }
+
+let runNodeProject = function(thisTestPath){
+  exec('npm install');
+  var spawn = require('child_process').spawn,
+    np    = spawn('node', [thisTestPath+"/index.js"]);
+
+
+
+
+
+
+  np.stdout.on('data', function (data) {
+
+ 
+
+    console.log('stdout: ' + data.toString());
+  });
+
+  np.stderr.on('data', function (data) {
+    console.log('stderr: ' + data.toString());
+  });
+
+  np.on('exit', function (code) {
+    console.log('child process exited with code ' + code.toString());
+  });
+
+
+}
+
+
 let createDockerCompose = function(projectfolder,thisTestPath,services){
 
 // service 100 = node js 
 
   //create docker file 
   exec("touch "+thisTestPath+"/docker-compose.yml");
-  exec(` echo 'version: '4'
+  exec(` echo 'version: "3"
   services:
-    ${projectfolder}:
-        image: nodejs-container
+    proj${projectfolder}:
+        image: node:8.4.0-alpine
         build: .
         copy: . .
         command:
@@ -147,8 +230,8 @@ let createDockerCompose = function(projectfolder,thisTestPath,services){
         ports:
           - "3003:3000"
         volumes:
-          - .:/usr/src/app/${projectfolder}
-          - /usr/src/app/${projectfolder}/node_modules
+          - .:/usr/src/app/proj${projectfolder}
+          - /usr/src/app/proj${projectfolder}/node_modules
               
 ' > ${thisTestPath}/docker-compose.yml`);
 }

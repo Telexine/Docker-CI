@@ -12,8 +12,13 @@ html
             script(src='public/assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js', type='text/javascript')
             script(src='public/assets/pages/scripts/form-wizard.min.js', type='text/javascript')
             script(src='public/js/dropzone.js', type='text/javascript')
+            script(src="public/assets/global/plugins/codemirror/lib/codemirror.js" type="text/javascript")
+            script(src="public/assets/global/plugins/codemirror/mode/javascript/javascript.js" type="text/javascript")
+            script(src="public/assets/global/plugins/codemirror/mode/htmlmixed/htmlmixed.js" type="text/javascript")
+            script(src="public/assets/global/plugins/codemirror/mode/css/css.js" type="text/javascript")
             script.
                   let _file;
+                  let source;
                   Dropzone.options.myAwesomeDropzone = {
                         dictDefaultMessage: "or click here ",
                         autoQueue: true,
@@ -21,10 +26,6 @@ html
                         acceptedFiles: ".zip",
                         init: function() {
                               myDropzone = this; // closure
-
-            
-
-
                               this.on("addedfile", function(file) { 
                                     if (this.files[1]!=null){
                                           this.removeFile(this.files[0]);
@@ -45,10 +46,31 @@ html
                                });
 
                                this.on("success", function(file,res) {
+                                     
+                                    source = new EventSource("/api/build/"+res.toString());
                                     console.log(res);
                                     $('#isupload').val(res);
                                     $('#btncontinue').click();
                                     $('#btnback').attr("style",'visibility:hidden');
+
+                                     source.addEventListener('console', function (result) {
+                                          console.log(result.data);
+
+
+                                          let  c1 = document.createElement("div");
+                                          c1.className = "prompt";
+                                          c1.innerText ="$ ";
+                                          let  cmd = document.createElement("div");
+                                          cmd.className = "command";
+                                          cmd.innerText = result.data;
+
+                                                c1.appendChild(cmd);
+
+
+
+                                          $('.code_body').append(c1);
+                                    });
+
                                });
 
                         },
@@ -59,3 +81,9 @@ html
                         maxFilesize: 50, // MB
 
                   };
+                  $(function() {
+   
+     
+                           
+                  });
+                 

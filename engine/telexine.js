@@ -25,6 +25,8 @@ exports.initializeMongo = function() {
         if(error){
             console.log('can\'t  build');
         }
+
+        
         exec('docker-compose  -f ./engine/docker-compose.yml up', (error, stdout, stderr) => {
             if(error){
                 console.log('can\'t  run');
