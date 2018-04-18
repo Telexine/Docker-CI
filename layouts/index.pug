@@ -46,31 +46,24 @@ html
                                });
 
                                this.on("success", function(file,res) {
-                                     
                                     source = new EventSource("/api/build/"+res.toString());
-                                    console.log(res);
                                     $('#isupload').val(res);
                                     $('#btncontinue').click();
                                     $('#btnback').attr("style",'visibility:hidden');
 
                                      source.addEventListener('console', function (result) {
-                                          console.log(result.data);
-
-
-                                          let  c1 = document.createElement("div");
-                                          c1.className = "prompt";
-                                          c1.innerText ="$ ";
-                                          let  cmd = document.createElement("div");
-                                          cmd.className = "command";
-                                          cmd.innerText = result.data;
-
-                                                c1.appendChild(cmd);
-
-
-
-                                          $('.code_body').append(c1);
+                                          buildConsoleLog(result.data,'console');
                                     });
 
+                                     source.addEventListener('err', function (result) {
+                                          buildConsoleLog(`<br><br>################################################<br>
+                                                            " ${result.data}<br>################################################`,'error');
+                                    });
+                                     source.addEventListener('end', function (result) {
+                                          buildConsoleLog(`<br><br>################################################<br>
+                                                            " ${result.data}<br>################################################`,'end');
+
+                                    });
                                });
 
                         },
@@ -81,9 +74,53 @@ html
                         maxFilesize: 50, // MB
 
                   };
+                   var loadTimer,build;
                   $(function() {
-   
-     
+      
+                         var i = 0;
+                         build = $('#builder');
+
+                         loadTimer = setInterval(function () {
+                              (i==4)? i=0: i++;
+                              if(build.text().length>13){
+                                    build.text("Building");
+                              }
+                              build.text(build.text()+".");
+                              
+                              var lasted = $('#builder');
+                             
+                        }, 1000);
                            
                   });
+
+
+                  let buildConsoleLog = function(data,state){
+                        let  c1 = document.createElement("div");
+                        c1.className = "prompt";
+                        c1.innerHTML ="worker $ ";
+                        let  cmd = document.createElement("span");
+
+                        switch(state){
+                              case 'console': cmd.setAttribute("style","color:#32c146;");
+                              break;
+                              case 'error':  cmd.setAttribute("style","color:#d73a49;padding-top:20px");  
+                              break;
+                              case 'end': 
+                                    c1.innerHTML ="";
+                                    cmd.setAttribute("style","color:#FFFFF;padding-top:20px");  
+                                    clearInterval(loadTimer);
+                                    build.text("Build Finished");
+                                    $('.bufferload').attr("style","display:none;");
+                              break;
+
+                        }
+
+
+                        //cmd.className = "error";
+                        cmd.innerHTML = (data).toString().replace(/"/g,"");
+                        c1.appendChild(cmd);
+                              
+                        $('.codein_body').append(c1);
+
+                  }
                  

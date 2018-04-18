@@ -61,15 +61,44 @@ router.get('/build/:buildID' ,function (req, res) {
   var buildID = req.params.buildID;
   var ev = SSE(res);
 
-  ev.sendEvent('console', function () {
-    return new Date
-  },1000);
+  exec('npm install');
+  let spawn = require('child_process').spawn,
+  np = spawn('node', ["uploads/project/testing/"+buildID+"/index.js"]);
+
+
+
+  np.stdout.on('data', function (data) {
+    ev.sendEvent('console', function () {
+
+      return replaceAll(data.toString(),"\n","<br>")
+    });
+    console.log('stdout: ' + data.toString());
+  });
+
+
+  np.stderr.on('data', function (data) {
+    ev.sendEvent('err', function () {
+      return replaceAll(data.toString(),"\n","<br>")
+    });
+    console.log('stderr: ' + data.toString());
+  });
+
+
+
+  np.on('exit', function (code) {
+    ev.sendEvent('end', function () {
+      return 'child process exited with code ' + code.toString();
+      ev.removeEvent();
+    });
+    console.log('child process exited with code ' + code.toString());
+  });
 
   ev.disconnect(function () {
       console.log("disconnected");
+      ev.removeEvent();
   });
 
-  ev.removeEvent('time',3100);
+  //ev.removeEvent('time',3100);
 
    
   })
@@ -133,9 +162,6 @@ router.post('/upload', function(req, res) {
 });
 
 
-let _workspace;
-// FILE operation
-//zxfv('1523120704998.zip');
 async function zxfv(filename) {
 
  
@@ -164,14 +190,8 @@ async function zxfv(filename) {
                         return;
                     }
 
-                   // createDockerCompose(filename.replace(".zip",""),thisTestPath,100);
-                    
-                    //runNodeProject(thisTestPath);
                     console.log("path"+thisTestPath);
-                    _workspace= thisTestPath;
                     return thisTestPath;
-
-                    //exec('docker-compose up '+thisTestPath+'/docker-compose.yml');
             });
           
 
@@ -236,8 +256,12 @@ let createDockerCompose = function(projectfolder,thisTestPath,services){
 ' > ${thisTestPath}/docker-compose.yml`);
 }
 
-
-
+function replaceAll(str, find, replace) {
+  return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+function escapeRegExp(str) {
+    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
 
 http.createServer(app).listen(3333, function () {
     console.log('Server is Runing on localhost:3333');

@@ -837,11 +837,15 @@ html
 													.code_bar
 														.code_btn
 													.code_body
-														.pre
-															.comment # Building
-															.prompt
-																| $
-																span.comment ============
+														.codein_body
+															.pre
+																.comment#builder # Building 
+																.prompt
+																	| 
+																	span.comment ================================================
+																	|
+														.bufferload worker $
+															span.pulse  _
 												
 												#tab4.tab-pane
 													h3.block Confirm your account
