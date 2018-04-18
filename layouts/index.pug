@@ -3,9 +3,8 @@ html
       include partials/header.pug
       include partials/navbar.pug
       include home.pug
+      link(rel='stylesheet', type='text/css', href='public/js/loading-bar.css')
       block script
-            link(rel='stylesheet', type='text/css', href='public/js/loading-bar.css')
-            script(type='text/javascript', src='public/js/loading-bar.js')
             script(src='public/assets/global/plugins/select2/js/select2.full.min.js', type='text/javascript')
             script(src='public/assets/global/plugins/jquery-validation/js/jquery.validate.min.js', type='text/javascript')
             script(src='public/assets/global/plugins/jquery-validation/js/additional-methods.min.js', type='text/javascript')
@@ -16,6 +15,7 @@ html
             script(src="public/assets/global/plugins/codemirror/mode/javascript/javascript.js" type="text/javascript")
             script(src="public/assets/global/plugins/codemirror/mode/htmlmixed/htmlmixed.js" type="text/javascript")
             script(src="public/assets/global/plugins/codemirror/mode/css/css.js" type="text/javascript")
+            script(type='text/javascript', src='public/js/loading-bar.js')
             script.
                   let _file;
                   let source;
@@ -45,10 +45,12 @@ html
 
                                });
 
+
                                this.on("success", function(file,res) {
                                     source = new EventSource("/api/build/"+res.toString());
                                     $('#isupload').val(res);
                                     $('#btncontinue').click();
+                                    $('#btncontinue').attr("style","visibility:hidden");
                                     $('#btnback').attr("style",'visibility:hidden');
 
                                      source.addEventListener('console', function (result) {
@@ -65,11 +67,14 @@ html
 
                                     });
                                });
+                               this.on("uploadprogress",function(file, progress, bytesSent) {
+                                
+                             
+                              });
 
                         },
 
                         uploadMultiple: false,
-
                         paramName: "file", // The name that will be used to transfer the file
                         maxFilesize: 50, // MB
 
@@ -111,6 +116,7 @@ html
                                     clearInterval(loadTimer);
                                     build.text("Build Finished");
                                     $('.bufferload').attr("style","display:none;");
+                                    $('#btncontinue').attr("style","visibility:visible");
                               break;
 
                         }

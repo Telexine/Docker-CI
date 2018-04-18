@@ -829,10 +829,10 @@ html
 																	input#projname(name='file', type='file', required='')
 															input#isupload.form-control(type='text', name='Project',minlength="3",style='visibility:hidden', required='' )
 												#tab3.tab-pane
-													h2.block Building
+													h2.block Building Status
 														.col-md-12
-															.ldBar.label-center(data-preset="circle",data-stroke="#659be0",data-value='50',style="width:200px;height:200px;margin:auto")
-													h4.form-section status
+															
+													h2.form-section
 																										.code_window
 													.code_bar
 														.code_btn
@@ -842,7 +842,7 @@ html
 																.comment#builder # Building 
 																.prompt
 																	| 
-																	span.comment ================================================
+																	span.comment ================================================<br>
 																	|
 														.bufferload worker $
 															span.pulse  _

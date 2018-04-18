@@ -70,7 +70,7 @@ router.get('/build/:buildID' ,function (req, res) {
   np.stdout.on('data', function (data) {
     ev.sendEvent('console', function () {
 
-      return replaceAll(data.toString(),"\n","<br>")
+      return replaceAll(data.toString(),"\n","<br> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  ")
     });
     console.log('stdout: ' + data.toString());
   });
