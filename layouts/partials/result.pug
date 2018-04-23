@@ -1,0 +1,79 @@
+.row
+  .col-lg-6.col-xs-12.col-sm-12
+    .portlet.light.bordered
+      .portlet-title
+        .caption
+          i.icon-cursor.font-dark.hide
+          span.caption-subject.font-dark.bold.uppercase General Stats
+        .actions
+          a.btn.btn-sm.btn-circle.red.easy-pie-chart-reload(href='javascript:;')
+            i.fa.fa-repeat
+            |  Reload
+      .portlet-body
+        .row
+          .col-md-4
+            .easy-pie-chart
+              .number.transactions(data-percent='55')
+                span +55
+                | % 
+                canvas(height='150', width='150', style='height: 75px; width: 75px;')
+              a.title(href='javascript:;')
+                | Transactions
+                i.icon-arrow-right
+          .margin-bottom-10.visible-sm  
+          .col-md-4
+            .easy-pie-chart
+              .number.visits(data-percent='85')
+                span +85
+                | % 
+                canvas(height='150', width='150', style='height: 75px; width: 75px;')
+              a.title(href='javascript:;')
+                | New Visits
+                i.icon-arrow-right
+          .margin-bottom-10.visible-sm  
+          .col-md-4
+            .easy-pie-chart
+              .number.bounce(data-percent='46')
+                span -46
+                | % 
+                canvas(height='150', width='150', style='height: 75px; width: 75px;')
+              a.title(href='javascript:;')
+                | Bounce
+                i.icon-arrow-right
+  .col-lg-6.col-xs-12.col-sm-12
+    .portlet.light.bordered
+      .portlet-title
+        .caption
+          i.icon-equalizer.font-dark.hide
+          span.caption-subject.font-dark.bold.uppercase Server Stats
+          span.caption-helper monthly stats...
+        .tools
+          a.collapse(href='', data-original-title='', title='')  
+          a.config(href='#portlet-config', data-toggle='modal', data-original-title='', title='')  
+          a.reload(href='', data-original-title='', title='')  
+          a.remove(href='', data-original-title='', title='')  
+      .portlet-body
+        .row
+          .col-md-4
+            .sparkline-chart
+              #sparkline_bar5.number
+                canvas(width='113', height='55', style='display: inline-block; width: 113px; height: 55px; vertical-align: top;')
+              a.title(href='javascript:;')
+                | Network
+                i.icon-arrow-right
+          .margin-bottom-10.visible-sm  
+          .col-md-4
+            .sparkline-chart
+              #sparkline_bar6.number
+                canvas(width='107', height='55', style='display: inline-block; width: 107px; height: 55px; vertical-align: top;')
+              a.title(href='javascript:;')
+                | CPU Load
+                i.icon-arrow-right
+          .margin-bottom-10.visible-sm  
+          .col-md-4
+            .sparkline-chart
+              #sparkline_line.number
+                canvas(width='100', height='55', style='display: inline-block; width: 100px; height: 55px; vertical-align: top;')
+              a.title(href='javascript:;')
+                | Load Rate
+                i.icon-arrow-right

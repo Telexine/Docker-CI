@@ -5,32 +5,30 @@ const mongoose = require('mongoose');
 const util = require('util');
 const exec = util.promisify(require('child_process').execSync);
 let  child  =require('child_process');
-const DATABASE_CONECTION = 'mongodb://mongo/docker-ci';
+const DATABASE_CONECTION = 'mongodb://localhost/docker-ci';
 
 var CISchema = mongoose.Schema({
     user_id: String,
     path: String,
-    port: Number
+    port: Number,
+    Unit_test: String
   });
  
+  var statSchema = mongoose.Schema({
+    Unit_test: String,
+    totalHeapSize: Number,
+    usedHeapSize: Number,
+    TimeStamp: {type: Date,default: Date.now}
+  });
+
+
 Unit_test = exports.Unit_test = mongoose.model('Unit_test', CISchema);
-  
+Stat = exports.Stat = mongoose.model('Stat', statSchema);
 
 exports.initializeMongo = function() {
  
     console.log('\n\n===================\ninit mongo container\n===================\n\n');
     //build  docker
-    exec('docker-compose  -f ./engine/docker-compose.yml build', (error, stdout, stderr) => {
-     
-        if(error){
-            console.log('can\'t  build');
-        }
-
-        
-        exec('docker-compose  -f ./engine/docker-compose.yml up', (error, stdout, stderr) => {
-            if(error){
-                console.log('can\'t  run');
-            }
             mongoose.connect(DATABASE_CONECTION);
   
             console.log('Trying to connect to ' + DATABASE_CONECTION);
@@ -39,16 +37,36 @@ exports.initializeMongo = function() {
             db.on('error', console.error.bind(console, 'connection error: We might not be as connected as I thought'));
             db.once('open', function() {
               console.log(' connected ! ');
-              addTest();
+
+              addTest('ID1','pathtofile/','2222').then(function(result){
+               console.log(result);
+                
+              });
+            // console.log(addTest('ID1','pathtofile/','2222'));
+             addStat('ID1',123,456);
             });
             
-        });
-
-
-    });
-
+     
 }
- 
+
+
+
+
+
+
+
+  var addStat = function(unit_test,totalHeapSize,usedHeapSize) {
+    var rec = new Stat({
+        Unit_test: unit_test,
+        totalHeapSize: totalHeapSize,
+        usedHeapSize: usedHeapSize,
+    });
+  
+    rec.save(function (err, fluffy) {
+      if (err) return console.error(err);
+      console.log('addStat');
+    });
+  }
 
 
 var addTest = function(User_id,Path,Port) {
@@ -58,15 +76,16 @@ var addTest = function(User_id,Path,Port) {
         port: Port
     });
   
-    rec.save(function (err, fluffy) {
+    rec.save(function (err, savc) {
       if (err) return console.error(err);
-      console.log('add');
+       var id = rec._id;
+       return id;
     });
 
 
   }
 
-addTest('ID1','pathtofile/','2222');
+
 
 
 /**

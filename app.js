@@ -11,6 +11,18 @@ var pug = require('pug');
 
 var SSE = require('sse-nodejs');
 
+var gc = (require('gc-stats'))();
+
+
+
+gc.on('stats', function (stats) {
+    //console.log('GC happened', stats);
+    //console.log(stats.before.totalHeapSize);
+});
+
+
+
+
 //file handler
 const fileUpload = require('express-fileupload');
 const util = require('util');
@@ -28,7 +40,7 @@ const engine = require('./engine/telexine')
 
 
 
-engine.initializeMongo();
+
 
 app.set('view engine', 'pug')
 app.set("views", path.join(__dirname, "layouts"));
@@ -51,7 +63,7 @@ app.get("/", function (req, res) {
  
 })
 
-
+engine.initializeMongo();
 //API
  
 
@@ -264,5 +276,6 @@ function escapeRegExp(str) {
 }
 
 http.createServer(app).listen(3333, function () {
+    //engine.addTest('ID1','pathtofile/','2222');
     console.log('Server is Runing on localhost:3333');
 })
