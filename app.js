@@ -63,10 +63,9 @@ app.get("/", function (req, res) {
  
 })
 
-
+engine.initializeMongo();
 //API
  
-engine.initializeMongo();
 
 app.use('/api',router);
 
@@ -110,6 +109,10 @@ router.get('/build/:buildID' ,function (req, res) {
       console.log("disconnected");
       ev.removeEvent();
   });
+
+  //ev.removeEvent('time',3100);
+
+  //ev.removeEvent('time',3100);
 
    
   })

@@ -34,14 +34,12 @@ exports.initializeMongo = function() {
       console.log('[x] init adminMongo complete!!!! on localhost:1234')
       process.stdout.write(('\nconnecting...\n'));
   
-      setTimeout(function() {
-        mongoose.connect(DATABASE_CONECTION,{
-        } );
+      
+      setTimeout(function() { 
+        mongoose.connect(DATABASE_CONECTION);
       }, 3000); // hot fix wait for 3 sec to connect
 
-        
- 
-  
+    
               console.log('Trying to connect to ' + DATABASE_CONECTION);
             
               var db = mongoose.connection;
@@ -49,8 +47,8 @@ exports.initializeMongo = function() {
               db.once('open', function() {
                 console.log('[x] connected ! ');
   
-                addTest('ID1','pathtofile/','2222');
-               
+                //addTest('ID1','pathtofile/','2222');
+                console.log('\n\n ready to use ');
               });
                
               
