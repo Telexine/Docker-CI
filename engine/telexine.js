@@ -1,11 +1,9 @@
-
-//var Promise  = require('bluebird');
-//var  logger  = require('winston');
 const mongoose = require('mongoose');
+const compose = require('docker-compose');
 const util = require('util');
 const exec = util.promisify(require('child_process').execSync);
 let  child  =require('child_process');
-const DATABASE_CONECTION = 'mongodb://localhost/docker-ci';
+const DATABASE_CONECTION = 'mongodb://localhost:27017/docker-ci';
 
 var CISchema = mongoose.Schema({
     user_id: String,
@@ -27,26 +25,45 @@ Stat = exports.Stat = mongoose.model('Stat', statSchema);
 
 exports.initializeMongo = function() {
  
-    console.log('\n\n===================\ninit mongo container\n===================\n\n');
-    //build  docker
-            mongoose.connect(DATABASE_CONECTION);
+  console.log('\n\n===================\ninitialize\n===================\n');
+  compose.up({ cwd: 'engine/', log: false })
+  .then(
+    () => { console.log('[x] init mongo container complete!!!!');
+      let spawn = require('child_process').spawn,
+      np    = spawn('node', ["engine/adminMongo/app.js"]);
+      console.log('[x] init adminMongo complete!!!! on localhost:1234')
+      process.stdout.write(('\nconnecting...\n'));
   
-            console.log('Trying to connect to ' + DATABASE_CONECTION);
-          
-            var db = mongoose.connection;
-            db.on('error', console.error.bind(console, 'connection error: We might not be as connected as I thought'));
-            db.once('open', function() {
-              console.log(' connected ! ');
+      setTimeout(function() {
+        mongoose.connect(DATABASE_CONECTION,{
+        } );
+      }, 3000); // hot fix wait for 3 sec to connect
 
-              addTest('ID1','pathtofile/','2222').then(function(result){
-               console.log(result);
-                
-              });
-            // console.log(addTest('ID1','pathtofile/','2222'));
-             addStat('ID1',123,456);
-            });
+        
+ 
+  
+              console.log('Trying to connect to ' + DATABASE_CONECTION);
             
-     
+              var db = mongoose.connection;
+              db.on('error', console.error.bind(console, 'connection error: We might not be as connected as I thought'));
+              db.once('open', function() {
+                console.log('[x] connected ! ');
+  
+                addTest('ID1','pathtofile/','2222');
+               
+              });
+               
+              
+  
+  
+  
+  
+  
+  }, 
+    err => { console.log('something went wrong:', err.message)}
+  );
+
+
 }
 
 
@@ -75,11 +92,25 @@ var addTest = function(User_id,Path,Port) {
         path: Path,
         port: Port
     });
+    
   
+
+
     rec.save(function (err, savc) {
       if (err) return console.error(err);
        var id = rec._id;
-       return id;
+
+        let rec2 = new Stat({
+        Unit_test: id,
+        totalHeapSize: 0,
+        usedHeapSize: 0
+          
+        
+
+      });
+
+      
+      rec2.save();
     });
 
 
@@ -110,3 +141,17 @@ child.on('close', function(code) {
  * 
  * 
 */
+
+
+
+
+exports.closingProcess =  function(){
+
+compose.down({ cwd: 'engine/', log: true })
+  .then(
+    () => { console.log('[x] closed container!!!!');
+    process.exit(1);
+  }, 
+    err => { console.log('something went wrong:', err.message)}
+  );
+}

@@ -63,9 +63,10 @@ app.get("/", function (req, res) {
  
 })
 
-engine.initializeMongo();
+
 //API
  
+engine.initializeMongo();
 
 app.use('/api',router);
 
@@ -109,8 +110,6 @@ router.get('/build/:buildID' ,function (req, res) {
       console.log("disconnected");
       ev.removeEvent();
   });
-
-  //ev.removeEvent('time',3100);
 
    
   })
@@ -279,3 +278,9 @@ http.createServer(app).listen(3333, function () {
     //engine.addTest('ID1','pathtofile/','2222');
     console.log('Server is Runing on localhost:3333');
 })
+process.on('SIGINT', function() {
+  console.log( "\n shutting down  (Ctrl-C)" );
+  engine.closingProcess();
+  // some other closing procedures go here
+  
+});
