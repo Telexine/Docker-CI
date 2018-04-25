@@ -49,14 +49,10 @@ exports.initializeMongo = function() {
   
                 //addTest('ID1','pathtofile/','2222');
                 console.log('\n\n ready to use ');
+
+               // addTest('1212','/dd',1111);
               });
                
-              
-  
-  
-  
-  
-  
   }, 
     err => { console.log('something went wrong:', err.message)}
   );

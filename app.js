@@ -8,11 +8,10 @@ var http = require('http');
 var fs = require('fs');
 var router = express.Router();
 var pug = require('pug');
-
+var GcLogParser = require('gc-log-parser');
 var SSE = require('sse-nodejs');
 
 var gc = (require('gc-stats'))();
-
 
 
 gc.on('stats', function (stats) {
@@ -71,6 +70,14 @@ app.use('/api',router);
 
 router.get('/build/:buildID' ,function (req, res) {
   var buildID = req.params.buildID;
+
+  // begin log testing data;
+  //engine.addTest(buildID,"uploads/project/testing/"+buildID+"/",1111);
+
+
+ 
+
+  
   var ev = SSE(res);
 
   exec('npm install');
@@ -105,6 +112,12 @@ router.get('/build/:buildID' ,function (req, res) {
     console.log('child process exited with code ' + code.toString());
   });
 
+
+  np = exec(" node --trace_gc uploads/project/testing/"+buildID+"/index.js > uploads/project/testing/"+buildID+"/index.log");
+
+
+
+
   ev.disconnect(function () {
       console.log("disconnected");
       ev.removeEvent();
@@ -113,6 +126,7 @@ router.get('/build/:buildID' ,function (req, res) {
   //ev.removeEvent('time',3100);
 
   //ev.removeEvent('time',3100);
+ 
 
    
   })
@@ -268,6 +282,13 @@ let createDockerCompose = function(projectfolder,thisTestPath,services){
           - /usr/src/app/proj${projectfolder}/node_modules
               
 ' > ${thisTestPath}/docker-compose.yml`);
+
+
+
+
+
+
+
 }
 
 function replaceAll(str, find, replace) {
