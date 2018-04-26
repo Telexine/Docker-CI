@@ -119,3 +119,13 @@
 .code_body pre {
     margin: 0;
   }
+
+  #codeBuild-controller {
+    top: 80%;
+    left: 43%;
+    z-index: 99;
+    position: fixed;
+    height: 45px;
+    padding: 0px;
+    visibility: hidden;
+}

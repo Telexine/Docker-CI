@@ -73,7 +73,7 @@ router.get('/build/:buildID' ,function (req, res) {
 
 
   var parser = new GcLogParser();
-let cur_pid;
+  let cur_pid;
   var ev = SSE(res);
   let curFilepath = "uploads/project/testing/"+buildID+"/index.js";
   exec('npm install');
@@ -84,7 +84,7 @@ let cur_pid;
 
   np.stdout.on('data', function (data) {
     
-    if(/\[[0-9]+:0x[0-9]+\]+/gi.test(data.toString().trim())){
+    if(/\[[0-9]+:0x/gi.test(data.toString().trim())){
 
       data.toString().trim().split('\n').forEach(function (line) {
         parser.parse(line);
@@ -94,9 +94,8 @@ let cur_pid;
     }else{
 
         ev.sendEvent('console', function () {
-          return replaceAll(data.toString(),"\n","<br> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  ")
+          return replaceAll(data.toString(),"\n"," &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  ")
         });
-        //console.log('stdout: ' +  data.toString());
         
 
   }
@@ -137,15 +136,12 @@ let cur_pid;
 
   ev.disconnect(function () {
       console.log("disconnected");
+      // kill current process
       cur_np.stdin.pause();
       cur_np.kill();
       ev.removeEvent();
   });
 
-  //ev.removeEvent('time',3100);
-
-  //ev.removeEvent('time',3100);
- 
 
    
   })
@@ -186,11 +182,9 @@ router.post('/upload', function(req, res) {
                       return;
                   }
 
-                 // createDockerCompose(filename.replace(".zip",""),thisTestPath,100);
-                  
-                  //runNodeProject(thisTestPath);
+ 
                   return res.status(200).send(filename.replace(".zip",""));
-                  //exec('docker-compose up '+thisTestPath+'/docker-compose.yml');
+                   
           });
         
 

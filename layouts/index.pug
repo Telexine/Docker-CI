@@ -3,6 +3,11 @@ html
       include partials/header.pug
       include partials/navbar.pug
       include home.pug
+      #codeBuild-controller.portlet.light.tasks-widget.bordered
+             | 
+             .btn.red(style="margin: 4px;") Stop
+                  i.fa.fa-stop
+             | 00:22 seconds
       link(rel='stylesheet', type='text/css', href='public/js/loading-bar.css')
       block script
             script(src='public/assets/global/plugins/select2/js/select2.full.min.js', type='text/javascript')
@@ -81,7 +86,10 @@ html
                   };
                    var loadTimer,build;
                   $(function() {
-      
+                        $('#codeBuild-controller').bind( "click", function() {
+                          alert( "User clicked on stop'" );
+                        });
+                         
                          var i = 0;
                          build = $('#builder');
 
@@ -100,9 +108,12 @@ html
 
 
                   let buildConsoleLog = function(data,state){
+                        //show controller 
+                        $('#codeBuild-controller').css("visibility", "visible");
                         let  c1 = document.createElement("div");
                         c1.className = "prompt";
-                        c1.innerHTML ="worker $ ";
+                        let d= new Date();
+                        c1.innerHTML =`worker@${addZero(d.getHours())}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())} $  `;
                         let  cmd = document.createElement("span");
 
                         switch(state){
@@ -129,4 +140,12 @@ html
                         $('.codein_body').append(c1);
 
                   }
+
+                  function addZero(i) {
+                        if (i < 10) {
+                              i = "0" + i;
+                        }
+                        return i;
+                        }
+
                  
