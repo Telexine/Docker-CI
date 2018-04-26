@@ -5,11 +5,15 @@ html
       include home.pug
       #codeBuild-controller.portlet.light.tasks-widget.bordered
              | 
-             .btn.red(style="margin: 4px;") Stop
+             #btnTobottom.btn.purple(style="margin: 4px;")
+                  i.fa.fa-angle-double-down 
+             #btnRedStop.btn.red(style="margin: 4px;") Stop
                   i.fa.fa-stop
              | 00:22 seconds
       link(rel='stylesheet', type='text/css', href='public/js/loading-bar.css')
+      link(href='public/assets/global/plugins/bootstrap-toastr/toastr.css', rel='stylesheet')
       block script
+            script(src='public/assets/global/plugins/bootstrap-toastr/toastr.js')
             script(src='public/assets/global/plugins/select2/js/select2.full.min.js', type='text/javascript')
             script(src='public/assets/global/plugins/jquery-validation/js/jquery.validate.min.js', type='text/javascript')
             script(src='public/assets/global/plugins/jquery-validation/js/additional-methods.min.js', type='text/javascript')
@@ -57,7 +61,7 @@ html
                                     $('#btncontinue').click();
                                     $('#btncontinue').attr("style","visibility:hidden");
                                     $('#btnback').attr("style",'visibility:hidden');
-
+                                   
                                      source.addEventListener('console', function (result) {
                                           buildConsoleLog(result.data,'console');
                                     });
@@ -86,8 +90,14 @@ html
                   };
                    var loadTimer,build;
                   $(function() {
-                        $('#codeBuild-controller').bind( "click", function() {
-                          alert( "User clicked on stop'" );
+                        $('#btnRedStop').bind( "click", function() {
+                              let btn = $(this);
+                              source.close();
+                              toastr.warning('By User',"Canceled Build");
+                              clearInterval(loadTimer);
+                              $('#btnRedStop').addClass("disabled");
+                              btn.css("pointer-events", "none");
+
                         });
                          
                          var i = 0;
@@ -106,7 +116,22 @@ html
                            
                   });
 
+                  toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "positionClass": "toast-bottom-right",
+                        "onclick": null,
+                        "showDuration": "1000",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                  }
 
+                  
                   let buildConsoleLog = function(data,state){
                         //show controller 
                         $('#codeBuild-controller').css("visibility", "visible");
@@ -133,7 +158,6 @@ html
                         }
 
 
-                        //cmd.className = "error";
                         cmd.innerHTML = (data).toString().replace(/"/g,"");
                         c1.appendChild(cmd);
                               
