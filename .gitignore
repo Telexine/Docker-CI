@@ -59,3 +59,7 @@ typings/
 
 # theme assets
 public/assets/
+
+# UnitTest Uploaded package 
+uploads/project/*.zip
+uploads/project/testing/

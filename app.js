@@ -10,14 +10,10 @@ var router = express.Router();
 var pug = require('pug');
 var GcLogParser = require('gc-log-parser');
 var SSE = require('sse-nodejs');
+ 
 
-var gc = (require('gc-stats'))();
 
-
-gc.on('stats', function (stats) {
-    //console.log('GC happened', stats);
-    //console.log(stats.before.totalHeapSize);
-});
+ 
 
 
 
@@ -67,7 +63,8 @@ engine.initializeMongo();
  
 
 app.use('/api',router);
-
+let spawn,np;
+let nmon;
 router.get('/build/:buildID' ,function (req, res) {
   var buildID = req.params.buildID;
 
@@ -75,23 +72,36 @@ router.get('/build/:buildID' ,function (req, res) {
   //engine.addTest(buildID,"uploads/project/testing/"+buildID+"/",1111);
 
 
- 
-
-  
+  var parser = new GcLogParser();
+let cur_pid;
   var ev = SSE(res);
-
+  let curFilepath = "uploads/project/testing/"+buildID+"/index.js";
   exec('npm install');
-  let spawn = require('child_process').spawn,
-  np = spawn('node', ["uploads/project/testing/"+buildID+"/index.js"]);
-
-
+  
+   spawn = require('child_process').spawn;
+   np = spawn('node', ["--trace_gc",curFilepath],{detached: true});
+   cur_np =np ;
 
   np.stdout.on('data', function (data) {
-    ev.sendEvent('console', function () {
+    
+    if(/\[[0-9]+:0x[0-9]+\]+/gi.test(data.toString().trim())){
 
-      return replaceAll(data.toString(),"\n","<br> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  ")
-    });
-    console.log('stdout: ' + data.toString());
+      data.toString().trim().split('\n').forEach(function (line) {
+        parser.parse(line);
+        console.log(parser.stats.spaces);
+      });
+      
+    }else{
+
+        ev.sendEvent('console', function () {
+          return replaceAll(data.toString(),"\n","<br> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  ")
+        });
+        //console.log('stdout: ' +  data.toString());
+        
+
+  }
+
+
   });
 
 
@@ -105,21 +115,30 @@ router.get('/build/:buildID' ,function (req, res) {
 
 
   np.on('exit', function (code) {
+
+    // SSE Event sender to close process 
     ev.sendEvent('end', function () {
-      return 'child process exited with code ' + code.toString();
+     
       ev.removeEvent();
-    });
-    console.log('child process exited with code ' + code.toString());
+      try{
+      return 'child process exited with code ' + code.toString();
+    
+        }catch(e){
+          return"exit";
+
+        } 
+      
+      });
+ 
+ 
   });
-
-
-  np = exec(" node --trace_gc uploads/project/testing/"+buildID+"/index.js > uploads/project/testing/"+buildID+"/index.log");
-
 
 
 
   ev.disconnect(function () {
       console.log("disconnected");
+      cur_np.stdin.pause();
+      cur_np.kill();
       ev.removeEvent();
   });
 
@@ -231,7 +250,7 @@ async function zxfv(filename) {
  
 }
 
-let runNodeProject = function(thisTestPath){
+let runNsdsdfdeProject = function(thisTestPath){
   exec('npm install');
   var spawn = require('child_process').spawn,
     np    = spawn('node', [thisTestPath+"/index.js"]);
@@ -308,3 +327,5 @@ process.on('SIGINT', function() {
   // some other closing procedures go here
   
 });
+
+ 
