@@ -69,9 +69,20 @@ router.get('/build/:buildID' ,function (req, res) {
   var buildID = req.params.buildID;
 
   // begin log testing data;
-  //engine.addTest(buildID,"uploads/project/testing/"+buildID+"/",1111);
-
-
+ // let id = engine.createTest(buildID,"uploads/project/testing/"+buildID+"/",1111);
+ 
+ /*
+    var stats = function  (data) {
+      return new Promise((resolve, reject) => {
+          engine.addTest(buildID,"uploads/project/testing/"+buildID+"/",1111,(err, data) => {
+          if (err) {
+            return reject (err)
+          }
+          console.log(resolve(data));
+        })
+      })
+    }
+ */
   var parser = new GcLogParser();
   let cur_pid;
   var ev = SSE(res);
@@ -79,7 +90,7 @@ router.get('/build/:buildID' ,function (req, res) {
   exec('npm install');
   
    spawn = require('child_process').spawn;
-   np = spawn('node', ["--trace_gc",curFilepath],{detached: true});
+   np = spawn('node', ["--trace_gc", '--trace_gc_verbose', '--trace_gc_nvp',"--max_old_space_size=100",curFilepath],{detached: true});
    cur_np =np ;
 
   np.stdout.on('data', function (data) {
@@ -88,7 +99,15 @@ router.get('/build/:buildID' ,function (req, res) {
 
       data.toString().trim().split('\n').forEach(function (line) {
         parser.parse(line);
-        console.log(parser.stats.spaces);
+        //console.log(parser.stats.spaces);
+        let l_alloc = JSON.stringify(parser.stats.spaces[0]);
+        let l_new = JSON.stringify(parser.stats.spaces[1]);
+        let l_old = JSON.stringify(parser.stats.spaces[2]);
+        let l_code = JSON.stringify(parser.stats.spaces[3]);
+        let l_map = JSON.stringify(parser.stats.spaces[4]);
+              
+
+        //console.log(l_new['name']);
       });
       
     }else{

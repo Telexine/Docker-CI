@@ -14,8 +14,10 @@ var CISchema = mongoose.Schema({
  
   var statSchema = mongoose.Schema({
     Unit_test: String,
-    totalHeapSize: Number,
-    usedHeapSize: Number,
+    name: String,
+    used: Number,
+    available: Number,
+    committed: Number,
     TimeStamp: {type: Date,default: Date.now}
   });
 
@@ -62,15 +64,16 @@ exports.initializeMongo = function() {
 
 
 
+ 
 
 
-
-
-  var addStat = function(unit_test,totalHeapSize,usedHeapSize) {
+addStat = function(unit_test,name,used,available,committed) {
     var rec = new Stat({
         Unit_test: unit_test,
-        totalHeapSize: totalHeapSize,
-        usedHeapSize: usedHeapSize,
+        name: name,
+        used: used,
+        available: available,
+        committed: committed,
     });
   
     rec.save(function (err, fluffy) {
@@ -79,32 +82,56 @@ exports.initializeMongo = function() {
     });
   }
 
+// Create and Save a new Note
+exports.createTest = (req, res) => {
+  // Validate request
+   
+ 
+  var rec = new Unit_test({
+    user_id: "sdsd",
+    path: 22,
+    port: 22
+  });
+  // Save Note in the database
+  rec.save()
+  .then(data => {
+      res.send(rec);
+  }).catch(err => {
+     
+  });
+};
 
-var addTest = function(User_id,Path,Port) {
+
+
+
+
+  addTest = function(User_id,Path,Port,res) {
     var rec = new Unit_test({
         user_id: User_id,
         path: Path,
         port: Port
     });
     
-  
-
-
     rec.save(function (err, savc) {
       if (err) return console.error(err);
        var id = rec._id;
 
         let rec2 = new Stat({
         Unit_test: id,
-        totalHeapSize: 0,
-        usedHeapSize: 0
+        name: "",
+        used: "",
+        available: "",
+        committed: "",
           
-        
-
       });
-
+       vid = rec._id;
       
-      rec2.save();
+       rec2.save(function(err,id) {console.log(id._id)
+        //es.status(200).send(id._id);
+      
+      });
+         
+        
     });
 
 
