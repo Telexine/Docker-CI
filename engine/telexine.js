@@ -4,16 +4,19 @@ const util = require('util');
 const exec = util.promisify(require('child_process').execSync);
 let  child  =require('child_process');
 const DATABASE_CONECTION = 'mongodb://localhost:27017/docker-ci';
+var Rx = require('rxjs/Rx');
+var observables = require('mongoose-observables');
+
 
 var CISchema = mongoose.Schema({
     user_id: String,
     path: String,
-    port: Number,
-    Unit_test: String
+    port: Number
+
   });
  
   var statSchema = mongoose.Schema({
-    Unit_test: String,
+    UnitID: String,
     name: String,
     used: Number,
     available: Number,
@@ -62,10 +65,52 @@ exports.initializeMongo = function() {
 
 }
 
-
-
  
+exports.logStat = function(unitID,Name,Used,Available,Committed){
+  return new Promise(resolve=>{
+observables.creator
+    .create(Stat, {
+      UnitID: unitID,
+      name: Name,
+      used: Used,
+      available: Available,
+      committed: Committed,
+    })
+    .subscribe(Stat =>{ 
+      resolve(Stat._id);}, 
+      err =>{
+        throw err
+      });
+  }
+)};
 
+
+
+
+
+//create function 
+exports.createTest = function(User_id,Path,Port){
+  return new Promise(resolve=>{
+observables.creator
+    .create(Unit_test, {
+      user_id: User_id,
+      path: Path,
+      port: Port
+    })
+    .subscribe(Unit_test =>{ 
+      resolve(Unit_test._id);}, 
+      err =>{
+        throw err
+      });
+  }
+)};
+  
+//* call func
+/*
+ this.createTest().then((data)=>{
+    console.log(data );
+ });
+*/
 
 addStat = function(unit_test,name,used,available,committed) {
     var rec = new Stat({
@@ -82,26 +127,7 @@ addStat = function(unit_test,name,used,available,committed) {
     });
   }
 
-// Create and Save a new Note
-exports.createTest = (req, res) => {
-  // Validate request
-   
  
-  var rec = new Unit_test({
-    user_id: "sdsd",
-    path: 22,
-    port: 22
-  });
-  // Save Note in the database
-  rec.save()
-  .then(data => {
-      res.send(rec);
-  }).catch(err => {
-     
-  });
-};
-
-
 
 
 

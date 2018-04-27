@@ -11,10 +11,10 @@ var pug = require('pug');
 var GcLogParser = require('gc-log-parser');
 var SSE = require('sse-nodejs');
  
-
+var Rx = require('rxjs/Rx');
 
  
-
+const source = interval(1000);
 
 
 
@@ -71,18 +71,18 @@ router.get('/build/:buildID' ,function (req, res) {
   // begin log testing data;
  // let id = engine.createTest(buildID,"uploads/project/testing/"+buildID+"/",1111);
  
- /*
-    var stats = function  (data) {
-      return new Promise((resolve, reject) => {
-          engine.addTest(buildID,"uploads/project/testing/"+buildID+"/",1111,(err, data) => {
-          if (err) {
-            return reject (err)
-          }
-          console.log(resolve(data));
-        })
-      })
-    }
- */
+ let refTestID;
+ 
+
+
+ 
+  engine.createTest("dev","uploads/project/testing/"+buildID+"/",11111).then((data)=>{
+  if(data) refTestID=data;
+  });
+   
+
+
+
   var parser = new GcLogParser();
   let cur_pid;
   var ev = SSE(res);
@@ -99,25 +99,35 @@ router.get('/build/:buildID' ,function (req, res) {
 
       data.toString().trim().split('\n').forEach(function (line) {
         parser.parse(line);
-        //console.log(parser.stats.spaces);
-        let l_alloc = JSON.stringify(parser.stats.spaces[0]);
-        let l_new = JSON.stringify(parser.stats.spaces[1]);
-        let l_old = JSON.stringify(parser.stats.spaces[2]);
-        let l_code = JSON.stringify(parser.stats.spaces[3]);
-        let l_map = JSON.stringify(parser.stats.spaces[4]);
+            try{ 
+              var obj = JSON.stringify(parser.stats.spaces);
+              for(var x in obj){
+          //     console.log(refTestID);
+              engine.logStat(refTestID
+                  ,JSON.parse(obj)[x].name,
+                  JSON.parse(obj)[x].used,
+                  JSON.parse(obj)[x].available,
+                  JSON.parse(obj)[x].committed)
+              .then((data)=>{
+                //console.log(data);
+              });
+            
+              }
+            }
+            catch(e){
+
+            }
+            
+            });
+            
+          }else{
+
+              ev.sendEvent('console', function () {
+                return replaceAll(data.toString(),"\n"," &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  ")
+              });
               
 
-        //console.log(l_new['name']);
-      });
-      
-    }else{
-
-        ev.sendEvent('console', function () {
-          return replaceAll(data.toString(),"\n"," &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  ")
-        });
-        
-
-  }
+        }
 
 
   });
