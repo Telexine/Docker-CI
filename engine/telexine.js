@@ -85,7 +85,32 @@ observables.creator
 )};
 
 
+exports.getReport = function(testID){
+  
 
+  console.log(testID);
+  let data = [] ;
+  return new Promise(resolve=>{
+  observables.finder
+    .find(Stat, {UnitID:testID})
+    .subscribe(Stat => {
+      resolve(Stat);
+    }
+    , err =>{
+        throw err;
+    });
+  });
+ 
+
+  
+ 
+
+ 
+
+
+
+  
+}
 
 
 //create function 

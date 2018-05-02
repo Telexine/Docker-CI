@@ -14,7 +14,7 @@ var SSE = require('sse-nodejs');
 var Rx = require('rxjs/Rx');
 
  
-const source = interval(1000);
+//const source = interval(1000);
 
 
 
@@ -72,6 +72,8 @@ router.get('/build/:buildID' ,function (req, res) {
  // let id = engine.createTest(buildID,"uploads/project/testing/"+buildID+"/",1111);
  
  let refTestID;
+
+ 
  
 
 
@@ -79,10 +81,6 @@ router.get('/build/:buildID' ,function (req, res) {
   engine.createTest("dev","uploads/project/testing/"+buildID+"/",11111).then((data)=>{
   if(data) refTestID=data;
   });
-   
-
-
-
   var parser = new GcLogParser();
   let cur_pid;
   var ev = SSE(res);
@@ -94,8 +92,8 @@ router.get('/build/:buildID' ,function (req, res) {
    cur_np =np ;
 
   np.stdout.on('data', function (data) {
-    
-    if(/\[[0-9]+:0x/gi.test(data.toString().trim())){
+    // console.log(data.toString().trim());
+    if(/\[[0-9]+:0x/gi.test(data.toString().trim())||/Fast promotion mode:/g.test(data.toString().trim())){
 
       data.toString().trim().split('\n').forEach(function (line) {
         parser.parse(line);
@@ -174,7 +172,52 @@ router.get('/build/:buildID' ,function (req, res) {
 
    
   })
+//API Report 
+router.get('/reports/:report_ID', function(req, res) {
+  let rid = req.params.report_ID;
+  let dataLog  = [];
 
+
+  engine.getReport(rid).then((data)=>{
+    //get log promise 
+      if(data) {dataLog=data;
+        //console.log(dataLog);
+
+
+
+        //de-consruct log 
+
+        
+        var obj = JSON.stringify(dataLog);
+        for(var x in obj){
+          //     console.log(refTestID);
+            try{
+
+
+
+              
+              /*
+                  console.log(JSON.parse(obj)[x].name+
+                  JSON.parse(obj)[x].used+
+                  JSON.parse(obj)[x].available+
+                  JSON.parse(obj)[x].committed);*/
+            }catch(e){
+
+
+            } 
+            
+        }
+        
+
+
+
+
+      }
+    });
+   
+
+
+});
 
 router.post('/upload', function(req, res) {
   if (!req.files)

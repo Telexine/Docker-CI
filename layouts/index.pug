@@ -97,7 +97,11 @@ html
                               clearInterval(loadTimer);
                               $('#btnRedStop').addClass("disabled");
                               btn.css("pointer-events", "none");
+                              setTimeout(function (){
+                                    // loade report page 
+                                $('#btncontinue').click();
 
+                              }, 1000); 
                         });
                          
                          var i = 0;
@@ -165,6 +169,13 @@ html
 
                   }
 
+
+                  function loadReport(){
+
+                        
+                  }
+
+                  // etc function
                   function addZero(i) {
                         if (i < 10) {
                               i = "0" + i;
