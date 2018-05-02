@@ -85,14 +85,36 @@ observables.creator
 )};
 
 
-exports.getReport = function(testID){
+exports.getReport = function(type,testID){
   
+/* 
+1. mem - mem allocate
+2. ns - new space 
+3. os - old space 
+4. cs - code space
+5. map - map space
+6. as - all space
+7. los -  Large object space
+*/  
+  let qtype;
+
+  switch (type){
+      case "mem" : qtype ="Memory allocator";break;
+      case "ns" : qtype ="New space";break;
+      case "os" : qtype ="Old space";break;
+      case "cs" : qtype ="Code space";break;
+      case "map" : qtype ="Map space";break;
+      case "los" : qtype ="Large object space";break;
+      case "as" : qtype ="All spaces";break;
+      default: return; // error
+  }
+
 
   console.log(testID);
   let data = [] ;
   return new Promise(resolve=>{
   observables.finder
-    .find(Stat, {UnitID:testID})
+    .find(Stat, {UnitID:testID,name:qtype})
     .subscribe(Stat => {
       resolve(Stat);
     }

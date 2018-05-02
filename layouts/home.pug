@@ -264,7 +264,7 @@ html
 												.alert.alert-success.display-none
 													button.close(data-dismiss='alert')
 													|  Your form validation is successful!
-												#tab1.tab-pane.active 
+												#tab4.tab-pane.active 
 													h3.block Provide your Project details
 													.form-group
 														label.control-label.col-md-3
@@ -349,7 +349,7 @@ html
 														.bufferload worker $
 															span.pulse  _
 												
-												#tab4.tab-pane
+												#tab1.tab-pane
 													include partials/result.pug
 										
 										.form-actions
@@ -755,6 +755,10 @@ html
 		script(src='public/assets/layouts/global/scripts/quick-sidebar.min.js', type='text/javascript')
 		script(src='public/assets/layouts/global/scripts/quick-nav.min.js', type='text/javascript')
 		// END THEME LAYOUT SCRIPTS
+		script(src='public/assets/global/plugins/highcharts/js/highcharts.js' type='text/javascript')
+		script(src='public/assets/global/plugins/highcharts/js/highcharts-3d.js' type='text/javascript')
+		script(src='public/assets/global/plugins/highcharts/js/highcharts-more.js' type='text/javascript')
+
 		script.
 			$(document).ready(function()
 			{
@@ -762,7 +766,197 @@ html
 					{
 					$('#radio1003').attr('checked', 'checked');
 				});
-
+				fetchlog();
 				 
 
-			});
+				
+							Highcharts.setOptions({
+								global: {
+									useUTC: false
+								}
+							});
+
+							$('#alert-close').click(function () {
+								$('#error-alert').hide();
+							});
+						});
+
+
+						var charts = {},
+							chartNo = 1,
+							chartRange = 60000; // 60 seconds
+
+						function convertTime (time) {
+							var rest = time;
+							var hours = Math.floor(rest / 3600000);
+							rest -= hours * 3600000;
+							hours = hours.toString();
+							if (hours.length == 1) hours = '0' + hours;
+							var minutes = Math.floor(rest / 60000);
+							rest -= minutes * 60000;
+							minutes = minutes.toString();
+							if (minutes.length == 1) minutes = '0' + minutes;
+							var seconds = Math.floor(rest / 1000);
+							var ms = ((rest - (seconds * 1000)) / 1000).toString().replace(/^0\./, '');
+							seconds = seconds.toString();
+							if (seconds.length == 1) seconds = '0' + seconds;
+
+							return hours + ':' + minutes + ':' + seconds + '.' + ms
+						}
+
+						function addSpacesChart (socket, id, title) {
+							$('#' + id).highcharts({
+								chart: {
+									type: 'spline',
+									animation: Highcharts.svg,
+									marginRight: 10,
+									events: {
+										load: function () {
+											var seriesUsed = this.series[0];
+											var seriesAvailable = this.series[1];
+											var seriesCommitted = this.series[2];
+											var chart = this;
+
+											setInterval(function () {
+												chart.redraw();
+											}, 1000);
+
+											socket.on('stats', function (data) {
+												data.spaces.forEach(function (space) {
+													if (space.name == title) {
+														var shift = false;
+														if (seriesUsed.data.length) {
+															shift = seriesUsed.data[seriesUsed.data.length - 1].x - seriesUsed.data[0].x > chartRange;
+														}
+
+														seriesUsed.addPoint({
+															x: data.start,
+															y: space.used,
+															gc: data.type,
+															took: data.took,
+															time: data.time,
+															marker: {
+																symbol: data.nvp.gc == 'ms'? 'square': 'circle'
+															}
+														}, false, shift);
+
+														seriesAvailable.addPoint({
+															x: data.start,
+															y: space.available,
+															gc: data.type,
+															took: data.took,
+															time: data.time,
+															marker: {
+																symbol: data.nvp.gc == 'ms'? 'square': 'circle'
+															}
+														}, false, shift);
+
+														seriesCommitted.addPoint({
+															x: data.start,
+															y: space.committed,
+															gc: data.type,
+															took: data.took,
+															time: data.time,
+															marker: {
+																symbol: data.nvp.gc == 'ms'? 'square': 'circle'
+															}
+														}, false, shift);
+													}
+												});
+											});
+										}
+									}
+								},
+								title: {
+									text: title
+								},
+								xAxis: {
+									type: 'datetime',
+									tickPixelInterval: 150
+								},
+								yAxis: {
+									title: {
+										text: 'KB'
+									},
+									plotLines: [{
+										value: 0,
+										width: 1,
+										color: '#808080'
+									}]
+								},
+								tooltip: {
+									formatter: function () {
+										return '<b>' + this.point.gc + '</b> (took: ' + this.point.took + ' ms)<br/>' +
+												Highcharts.dateFormat('%Y-%m-%d %H:%M:%S.', this.x) + (this.x % 1000) +
+												' (after ' + convertTime(this.point.time) + ')<br/>' +
+												Highcharts.numberFormat(this.y, 2) + ' KB';
+									}
+								},
+								legend: {
+									enabled: true
+								},
+								exporting: {
+									enabled: false
+								},
+								series: [
+									{name: 'Used',      data: []},
+									{name: 'Available', data: []},
+									{name: 'Committed', data: []}
+								]
+							});
+						}
+
+					let fetchlog = function(){
+
+
+						Rx.DOM.ajax({ url: '/api/reports/5ae998461400b42c6a1cd946/mem', responseType: 'json'})
+							.subscribe(
+								function (data) {
+								data.response.forEach(function (log) {
+									console.log(log);
+								});
+								},
+								function (error) {
+								// Log the error
+								console.log(error);
+								}
+					 
+							)
+							}
+							/*
+						$.ajax({
+							url: '/reports/5ae97e4551f15c1ea0b3faaa/mem',
+							cache: false,
+							type: "GET",
+							ContentType: 'application/json',
+							success: function(res) {
+								console.log(res);
+							},
+							error: function(xhr) {
+
+							}
+						});
+						*/
+						/*
+						var socket = io.connect('http://localhost:9999');
+						if (socket) {
+							console.log('Backend connected');
+							socket.once('stats', function (data) {
+								$('#loader').hide(500);
+								data.spaces.forEach(function (space) {
+									if (!charts[space.name]) {
+										console.log('Add chart for ' + space.name);
+										$('#charts').append('<div class="chart" id="chart' + chartNo + '"></div>');
+										charts[space.name] = 'chart' + chartNo;
+										addSpacesChart(socket, charts[space.name], space.name);
+										++chartNo;
+									}
+								});
+							});
+							socket.on('spawn_error', function (data) {
+								console.log(data.toString());
+								$('#error-msg').html($('#error-msg').html() + '<pre>' + data.toString() + '</pre>');
+								$('#error-alert').show();
+							});
+						}
+						*/

@@ -173,29 +173,30 @@ router.get('/build/:buildID' ,function (req, res) {
    
   })
 //API Report 
-router.get('/reports/:report_ID', function(req, res) {
+router.get('/reports/:report_ID/:type', function(req, res) {
   let rid = req.params.report_ID;
+  let type = req.params.type;
   let dataLog  = [];
 
-
-  engine.getReport(rid).then((data)=>{
+/* 
+1. mem - mem allocate
+2. ns - new space 
+3. os - old space 
+4. cs - code space
+5. map - map space
+6. as - all space
+7. los -  Large object space
+*/  
+  engine.getReport(type,rid).then((data)=>{
     //get log promise 
-      if(data) {dataLog=data;
+      if(data) {
+        dataLog=data;
         //console.log(dataLog);
-
-
-
         //de-consruct log 
-
-        
         var obj = JSON.stringify(dataLog);
         for(var x in obj){
           //     console.log(refTestID);
             try{
-
-
-
-              
               /*
                   console.log(JSON.parse(obj)[x].name+
                   JSON.parse(obj)[x].used+
