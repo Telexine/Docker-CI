@@ -79,8 +79,11 @@ router.get('/build/:buildID' ,function (req, res) {
 
  
   engine.createTest("dev","uploads/project/testing/"+buildID+"/",11111).then((data)=>{
-  if(data) refTestID=data;
-  });
+  if(data){ refTestID=data;
+
+
+
+
   var parser = new GcLogParser();
   let cur_pid;
   var ev = SSE(res);
@@ -100,7 +103,7 @@ router.get('/build/:buildID' ,function (req, res) {
             try{ 
               var obj = JSON.stringify(parser.stats.spaces);
               for(var x in obj){
-          //     console.log(refTestID);
+            //console.log(refTestID);
               engine.logStat(refTestID
                   ,JSON.parse(obj)[x].name,
                   JSON.parse(obj)[x].used,
@@ -169,7 +172,7 @@ router.get('/build/:buildID' ,function (req, res) {
       ev.removeEvent();
   });
 
-
+}});
    
   })
 //API Report 
@@ -187,33 +190,48 @@ router.get('/reports/:report_ID/:type', function(req, res) {
 6. as - all space
 7. los -  Large object space
 */  
-  engine.getReport(type,rid).then((data)=>{
+
+let qtype;
+
+switch (type){
+    case "mem" : qtype ="Memory allocator";break;
+    case "ns" : qtype ="New space";break;
+    case "os" : qtype ="Old space";break;
+    case "cs" : qtype ="Code space";break;
+    case "map" : qtype ="Map space";break;
+    case "los" : qtype ="Large object space";break;
+    case "as" : qtype ="All spaces";break;
+    default: res.send("error").statusCode('400'); // error
+}
+
+
+  engine.getReport(qtype,rid).then((data)=>{
     //get log promise 
       if(data) {
-        dataLog=data;
-        //console.log(dataLog);
+ 
         //de-consruct log 
-        var obj = JSON.stringify(dataLog);
+        var obj = JSON.stringify(data);
+
+
+        /*
         for(var x in obj){
-          //     console.log(refTestID);
-            try{
-              /*
+              // console.log(refTestID);
+
+           
                   console.log(JSON.parse(obj)[x].name+
                   JSON.parse(obj)[x].used+
                   JSON.parse(obj)[x].available+
-                  JSON.parse(obj)[x].committed);*/
-            }catch(e){
-
-
-            } 
+                  JSON.parse(obj)[x].committed);
+                
+ 
             
-        }
+        }*/
         
 
 
 
-
-      }
+        res.status(200).send(obj); 
+      }else res.status(404).send("ERROR");
     });
    
 

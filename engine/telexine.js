@@ -96,26 +96,16 @@ exports.getReport = function(type,testID){
 6. as - all space
 7. los -  Large object space
 */  
-  let qtype;
-
-  switch (type){
-      case "mem" : qtype ="Memory allocator";break;
-      case "ns" : qtype ="New space";break;
-      case "os" : qtype ="Old space";break;
-      case "cs" : qtype ="Code space";break;
-      case "map" : qtype ="Map space";break;
-      case "los" : qtype ="Large object space";break;
-      case "as" : qtype ="All spaces";break;
-      default: return; // error
-  }
 
 
-  console.log(testID);
+
+  //console.log(testID);
   let data = [] ;
   return new Promise(resolve=>{
   observables.finder
-    .find(Stat, {UnitID:testID,name:qtype})
+    .find(Stat, {UnitID:testID,name:type})
     .subscribe(Stat => {
+      //console.log(Stat)
       resolve(Stat);
     }
     , err =>{
