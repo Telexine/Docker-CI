@@ -52,10 +52,8 @@ exports.initializeMongo = function() {
               db.once('open', function() {
                 console.log('[x] connected ! ');
   
-                //addTest('ID1','pathtofile/','2222');
-                console.log('\n\n ready to use ');
 
-               // addTest('1212','/dd',1111);
+                console.log('\n\n## ready to use ## \n');
               });
                
   }, 

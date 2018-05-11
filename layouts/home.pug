@@ -755,208 +755,230 @@ html
 		script(src='public/assets/layouts/global/scripts/quick-sidebar.min.js', type='text/javascript')
 		script(src='public/assets/layouts/global/scripts/quick-nav.min.js', type='text/javascript')
 		// END THEME LAYOUT SCRIPTS
-		script(src='public/assets/global/plugins/highcharts/js/highcharts.js' type='text/javascript')
-		script(src='public/assets/global/plugins/highcharts/js/highcharts-3d.js' type='text/javascript')
-		script(src='public/assets/global/plugins/highcharts/js/highcharts-more.js' type='text/javascript')
-
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js")
+		script(src='node_modules/chart.js/dist/Chart.min.js' type='text/javascript')
+		script(src='public/js/script.js' type='text/javascript')
 		script.
+
+			window.onload = function() {
+				var ctx = document.getElementById('memChart').getContext('2d');
+				window.myLine = new Chart(ctx, config);
+
+
+									/*
+
+										window.myLine.data.datasets.push({
+											label: 'test',
+											backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+											borderColor: window.chartColors.red,
+											fill: false,
+											backgroundColor: '#ff0000',
+										data: [{
+											x: newDate(0),
+											y: randomScalingFactor()
+										}, {
+											x: newDate(2),
+											y: randomScalingFactor()
+										}, {
+											x: newDate(4),
+											y: randomScalingFactor()
+										}, {
+											x: newDate(5),
+											y: randomScalingFactor()
+										}]
+											});
+										window.myLine.update();
+
+										*/
+
+			};
+
 			$(document).ready(function()
 			{
-				$('#clickmewow').click(function()
-					{
-					$('#radio1003').attr('checked', 'checked');
-				});
 				fetchlog();
+			});
+				/*var ctx = document.getElementById('memChart').getContext('2d');
+				window.myLine = new Chart(ctx, config);
+				*/
+				
+
+					// TODO : fix issue with addData
+					// See https://github.com/chartjs/Chart.js/issues/5197
+					// The Add Data button for this sample has no effect.
+					// An error is logged in the console.
 				 
 
-				
-							Highcharts.setOptions({
-								global: {
-									useUTC: false
-								}
-							});
+				 /*
+						if (config.data.datasets.length > 0) {
+							var numTicks = window.myLine.scales['x-axis-0'].ticksAsTimestamps.length;
+							var lastTime = numTicks ? moment(window.myLine.scales['x-axis-0'].ticksAsTimestamps[numTicks - 1]) : moment();
 
-							$('#alert-close').click(function () {
-								$('#error-alert').hide();
-							});
-						});
+							var newTime = lastTime
+								.clone()
+								.add(1, 'day')
+								.format('MM/DD/YYYY HH:mm');
 
+							for (var index = 0; index < config.data.datasets.length; ++index) {
+								config.data.datasets[index].data.push({
+									x: newTime,
+									y: randomScalingFactor()
+								});
+							}
 
-						var charts = {},
-							chartNo = 1,
-							chartRange = 60000; // 60 seconds
-
-						function convertTime (time) {
-							var rest = time;
-							var hours = Math.floor(rest / 3600000);
-							rest -= hours * 3600000;
-							hours = hours.toString();
-							if (hours.length == 1) hours = '0' + hours;
-							var minutes = Math.floor(rest / 60000);
-							rest -= minutes * 60000;
-							minutes = minutes.toString();
-							if (minutes.length == 1) minutes = '0' + minutes;
-							var seconds = Math.floor(rest / 1000);
-							var ms = ((rest - (seconds * 1000)) / 1000).toString().replace(/^0\./, '');
-							seconds = seconds.toString();
-							if (seconds.length == 1) seconds = '0' + seconds;
-
-							return hours + ':' + minutes + ':' + seconds + '.' + ms
+							window.myLine.update();
 						}
+					});
+					*/
 
-						function addSpacesChart (socket, id, title) {
-							$('#' + id).highcharts({
-								chart: {
-									type: 'spline',
-									animation: Highcharts.svg,
-									marginRight: 10,
-									events: {
-										load: function () {
-											var seriesUsed = this.series[0];
-											var seriesAvailable = this.series[1];
-											var seriesCommitted = this.series[2];
-											var chart = this;
+				
 
-											setInterval(function () {
-												chart.redraw();
-											}, 1000);
 
-											socket.on('stats', function (data) {
-												data.spaces.forEach(function (space) {
-													if (space.name == title) {
-														var shift = false;
-														if (seriesUsed.data.length) {
-															shift = seriesUsed.data[seriesUsed.data.length - 1].x - seriesUsed.data[0].x > chartRange;
-														}
 
-														seriesUsed.addPoint({
-															x: data.start,
-															y: space.used,
-															gc: data.type,
-															took: data.took,
-															time: data.time,
-															marker: {
-																symbol: data.nvp.gc == 'ms'? 'square': 'circle'
-															}
-														}, false, shift);
 
-														seriesAvailable.addPoint({
-															x: data.start,
-															y: space.available,
-															gc: data.type,
-															took: data.took,
-															time: data.time,
-															marker: {
-																symbol: data.nvp.gc == 'ms'? 'square': 'circle'
-															}
-														}, false, shift);
-
-														seriesCommitted.addPoint({
-															x: data.start,
-															y: space.committed,
-															gc: data.type,
-															took: data.took,
-															time: data.time,
-															marker: {
-																symbol: data.nvp.gc == 'ms'? 'square': 'circle'
-															}
-														}, false, shift);
-													}
-												});
-											});
-										}
-									}
-								},
-								title: {
-									text: title
-								},
-								xAxis: {
-									type: 'datetime',
-									tickPixelInterval: 150
-								},
-								yAxis: {
-									title: {
-										text: 'KB'
-									},
-									plotLines: [{
-										value: 0,
-										width: 1,
-										color: '#808080'
+			
+							var color = Chart.helpers.color;
+							var config = {
+								type: 'line',
+								data: {
+									datasets: [{
+										label: 'Avaliable',
+										backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+										borderColor: window.chartColors.red,
+										fill: false,
+										data: [{
+											x: newDateString(0),
+											y: randomScalingFactor()
+										}, {
+											x: newDateString(2),
+											y: randomScalingFactor()
+										}, {
+											x: newDateString(4),
+										 	y: randomScalingFactor()
+										}, {
+											x: newDateString(5),
+											y: randomScalingFactor()
+										}],
+									},{
+										label: 'Used',
+										backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+										borderColor: window.chartColors.grey,
+										fill: false,
+										data: [{
+											x: newDate(0),
+											y: randomScalingFactor()
+										}, {
+											x: newDate(2),
+											y: randomScalingFactor()
+										}, {
+											x: newDate(4),
+											y: randomScalingFactor()
+										}, {
+											x: newDate(5),
+											y: randomScalingFactor()
+										}]
+									
+								}, {
+										label: 'Commited',
+										backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+										borderColor: window.chartColors.green,
+										fill: false,
+										data: [{
+											x: newDate(0),
+											y: randomScalingFactor()
+										}, {
+											x: newDate(2),
+											y: randomScalingFactor()
+										}, {
+											x: newDate(4),
+											y: randomScalingFactor()
+										}, {
+											x: newDate(5),
+											y: randomScalingFactor()
+										}]
 									}]
 								},
-								tooltip: {
-									formatter: function () {
-										return '<b>' + this.point.gc + '</b> (took: ' + this.point.took + ' ms)<br/>' +
-												Highcharts.dateFormat('%Y-%m-%d %H:%M:%S.', this.x) + (this.x % 1000) +
-												' (after ' + convertTime(this.point.time) + ')<br/>' +
-												Highcharts.numberFormat(this.y, 2) + ' KB';
+								options: {
+									responsive: true,
+									title: {
+										display: true,
+										text: 'Memory Allocator'
+									},
+									scales: {
+										xAxes: [{
+											type: 'time',
+											display: true,
+											scaleLabel: {
+												display: true,
+												labelString: 'Date'
+											},
+											ticks: {
+												major: {
+													fontStyle: 'bold',
+													fontColor: '#FF0000'
+												}
+											}
+										}],
+										yAxes: [{
+											display: true,
+											scaleLabel: {
+												display: true,
+												labelString: 'KB'
+											}
+										}]
 									}
-								},
-								legend: {
-									enabled: true
-								},
-								exporting: {
-									enabled: false
-								},
-								series: [
-									{name: 'Used',      data: []},
-									{name: 'Available', data: []},
-									{name: 'Committed', data: []}
-								]
-							});
-						}
+								}
+							};
+			 
+	
 
 					let fetchlog = function(){
 
 
-						Rx.DOM.ajax({ url: '/api/reports/5ae998461400b42c6a1cd946/mem', responseType: 'json'})
+						Rx.DOM.ajax({ url: '/api/reports/5aeff59c3293e50d8d5508c0/mem', responseType: 'json'})
 							.subscribe(
 								function (data) {
-								data.response.forEach(function (log) {
-									console.log(log);
-								});
+									console.log('Backend connected');
+									
+									let xDate= Array();
+									let yAval = Array();
+									let yUsed = Array();
+									let yComm = Array();
+									data.response.forEach(function (log) {
+										
+										xDate.push(log.TimeStamp);
+										ykB.push(log.used);
+										//console.log(log);
+
+									});
+
+
+									window.myLine.data.datasets.push({
+											label: 'test',
+											backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+											borderColor: window.chartColors.red,
+											fill: false,
+											backgroundColor: '#ff0000',
+										data: [{
+											x: newDate(0),
+											y: 0
+										}]
+											});
+										window.myLine.update();
+
+								console.log(xDate[0]);
 								},
 								function (error) {
 								// Log the error
 								console.log(error);
 								}
 					 
-							)
+							)	
 							}
-							/*
-						$.ajax({
-							url: '/reports/5ae97e4551f15c1ea0b3faaa/mem',
-							cache: false,
-							type: "GET",
-							ContentType: 'application/json',
-							success: function(res) {
-								console.log(res);
-							},
-							error: function(xhr) {
+					//temp	
+				function newDate(days) {
+					return moment().add(days, 'd').toDate();
+				}
 
-							}
-						});
-						*/
-						/*
-						var socket = io.connect('http://localhost:9999');
-						if (socket) {
-							console.log('Backend connected');
-							socket.once('stats', function (data) {
-								$('#loader').hide(500);
-								data.spaces.forEach(function (space) {
-									if (!charts[space.name]) {
-										console.log('Add chart for ' + space.name);
-										$('#charts').append('<div class="chart" id="chart' + chartNo + '"></div>');
-										charts[space.name] = 'chart' + chartNo;
-										addSpacesChart(socket, charts[space.name], space.name);
-										++chartNo;
-									}
-								});
-							});
-							socket.on('spawn_error', function (data) {
-								console.log(data.toString());
-								$('#error-msg').html($('#error-msg').html() + '<pre>' + data.toString() + '</pre>');
-								$('#error-alert').show();
-							});
-						}
-						*/
+				function newDateString(days) {
+					return moment().add(days, 'd').format();
+				}
