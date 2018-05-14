@@ -761,25 +761,36 @@ html
 		script.
 
 			window.onload = function() {
+				let d = "5af94099f30fd6099d5c8f22";
+				window.myLine  = {};
 				var ctx = document.getElementById('memChart').getContext('2d');
-				window.myLine = new Chart(ctx, config);
+				window.myLine[0] = new Chart(ctx, cfg[0]);
 
 				var ctxns = document.getElementById('nsChart').getContext('2d');
-				window.myLine2 = new Chart(ctxns, config);
-				window.myLine2.options.title.text = "New space";
+				window.myLine[1] = new Chart(ctxns, cfg[1]);
+				
+				window.myLine[1].options.title.text = "New space";
+
 				var ctxos = document.getElementById('osChart').getContext('2d');
-				window.myLine3 = new Chart(ctxos, config);
-				window.myLine3.options.title.text = "Old space";
+				window.myLine[2] = new Chart(ctxos, cfg[2]);
+				window.myLine[2].options.title.text = "Old space";
 				var ctxcs = document.getElementById('csChart').getContext('2d');
-				window.myLine4 = new Chart(ctxcs, config);
-				window.myLine4.options.title.text = "Code space";
+				window.myLine[3] = new Chart(ctxcs, cfg[3]);
+				window.myLine[3].options.title.text = "Code space";
 				var ctxlos = document.getElementById('losChart').getContext('2d');
-				window.myLine5 = new Chart(ctxlos, config);
-				window.myLine5.options.title.text = "Large object space";
+				window.myLine[4] = new Chart(ctxlos, cfg[4]);
+				window.myLine[4].options.title.text = "Large object space";
 				var ctxas = document.getElementById('asChart').getContext('2d');
-				window.myLine6 = new Chart(ctxas, config);		 
-				window.myLine5.options.title.text = "All spaces";		 
-				fetchlog();		
+				window.myLine[5] = new Chart(ctxas, cfg[5]);		 
+				window.myLine[5].options.title.text = "All spaces";		  
+
+				fetchlog2(d,window.myLine[0],"mem");
+				fetchlog2(d,window.myLine[1],"ns");
+			 	fetchlog2(d,window.myLine[2],"os");
+			 	fetchlog2(d,window.myLine[3],"cs");
+			 	fetchlog2(d,window.myLine[4],"los");
+				fetchlog2(d,window.myLine[5],"as");
+						  
 
 			};
 
@@ -793,7 +804,74 @@ html
 
 			
 							var color = Chart.helpers.color;
-							var config = {
+
+						 var cfg = {};
+
+						 for(let i = 0 ; i<6;i++){
+							  cfg[i] = {
+								
+								type: 'line',
+								data: {
+									datasets: [{
+										label: 'Avaliable',
+										backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+										borderColor: window.chartColors.red,
+										fill: false
+									},{
+										label: 'Used',
+										backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+										borderColor: window.chartColors.grey,
+										fill: false 
+									
+									}, {
+										label: 'Commited',
+										backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+										borderColor: window.chartColors.green,
+										fill: false
+									}]
+								},
+								options: {
+									maintainAspectRatio: false,
+									responsive: true,
+									title: {
+										display: true,
+										text: 'Memory Allocator'
+									},
+									scales: {
+										xAxes: [{
+											type: 'time',
+											display: true,
+											scaleLabel: {
+												display: true,
+												labelString: 'Date'
+											},
+											ticks: {
+												major: {
+													fontStyle: 'bold',
+													fontColor: '#FF0000'
+												}
+											}
+										}],
+										yAxes: [{
+											ticks: {
+												beginAtZero: true,
+												// Include Unit 
+												callback: function(value, index, values) {
+													return  niceBytes(value);
+												}
+											},	
+											display: true,
+											scaleLabel: {
+												display: true,
+												labelString: "Size"
+												}
+										}
+									]
+									}
+								}
+							
+							};}
+			 					var config2 = {
 								
 								type: 'line',
 								data: {
@@ -856,7 +934,6 @@ html
 								}
 							};
 			 
-			 
 
 
 							const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -870,6 +947,51 @@ html
 
 								return(n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
 								}
+
+
+
+						let fetchlog2 = function(Build,graph/* window.myLine*/,type){
+						let BuildID=Build;
+						let graphObj =graph;
+						//mem
+						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/${type}`, responseType: 'json'})
+							.subscribe(
+								function (data) {
+									console.log('Backend connected');
+									
+						 
+									data.response.forEach(function (log) {
+										
+							 
+											graphObj.data.datasets[0].data.push({
+														x: log.TimeStamp,
+														y: log.available,
+											});
+											
+											graphObj.data.datasets[1].data.push({
+														x: log.TimeStamp,
+														y: log.used,
+											});
+											graphObj.data.datasets[2].data.push({
+														x: log.TimeStamp,
+														y: log.committed,
+											});
+						 
+									
+											
+									});
+							
+								graphObj.update();
+								},
+								function (error) {
+								// Log the error
+								console.log(error);
+								}
+							);
+						}
+
+
+
 					let fetchlog = function(){
 						let BuildID="5af94099f30fd6099d5c8f22";
 						//mem
