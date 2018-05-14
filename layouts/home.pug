@@ -764,73 +764,29 @@ html
 				var ctx = document.getElementById('memChart').getContext('2d');
 				window.myLine = new Chart(ctx, config);
 
-
-									/*
-
-										window.myLine.data.datasets.push({
-											label: 'test',
-											backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
-											borderColor: window.chartColors.red,
-											fill: false,
-											backgroundColor: '#ff0000',
-										data: [{
-											x: newDate(0),
-											y: randomScalingFactor()
-										}, {
-											x: newDate(2),
-											y: randomScalingFactor()
-										}, {
-											x: newDate(4),
-											y: randomScalingFactor()
-										}, {
-											x: newDate(5),
-											y: randomScalingFactor()
-										}]
-											});
-										window.myLine.update();
-
-										*/
+				var ctxns = document.getElementById('nsChart').getContext('2d');
+				window.myLine2 = new Chart(ctxns, config);
+				window.myLine2.options.title.text = "New space";
+				var ctxos = document.getElementById('osChart').getContext('2d');
+				window.myLine3 = new Chart(ctxos, config);
+				window.myLine3.options.title.text = "Old space";
+				var ctxcs = document.getElementById('csChart').getContext('2d');
+				window.myLine4 = new Chart(ctxcs, config);
+				window.myLine4.options.title.text = "Code space";
+				var ctxlos = document.getElementById('losChart').getContext('2d');
+				window.myLine5 = new Chart(ctxlos, config);
+				window.myLine5.options.title.text = "Large object space";
+				var ctxas = document.getElementById('asChart').getContext('2d');
+				window.myLine6 = new Chart(ctxas, config);		 
+				window.myLine5.options.title.text = "All spaces";		 
+				fetchlog();		
 
 			};
 
 			$(document).ready(function()
 			{
-				fetchlog();
+				
 			});
-				/*var ctx = document.getElementById('memChart').getContext('2d');
-				window.myLine = new Chart(ctx, config);
-				*/
-				
-
-					// TODO : fix issue with addData
-					// See https://github.com/chartjs/Chart.js/issues/5197
-					// The Add Data button for this sample has no effect.
-					// An error is logged in the console.
-				 
-
-				 /*
-						if (config.data.datasets.length > 0) {
-							var numTicks = window.myLine.scales['x-axis-0'].ticksAsTimestamps.length;
-							var lastTime = numTicks ? moment(window.myLine.scales['x-axis-0'].ticksAsTimestamps[numTicks - 1]) : moment();
-
-							var newTime = lastTime
-								.clone()
-								.add(1, 'day')
-								.format('MM/DD/YYYY HH:mm');
-
-							for (var index = 0; index < config.data.datasets.length; ++index) {
-								config.data.datasets[index].data.push({
-									x: newTime,
-									y: randomScalingFactor()
-								});
-							}
-
-							window.myLine.update();
-						}
-					});
-					*/
-
-				
 
 
 
@@ -838,66 +794,29 @@ html
 			
 							var color = Chart.helpers.color;
 							var config = {
+								
 								type: 'line',
 								data: {
 									datasets: [{
 										label: 'Avaliable',
 										backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
 										borderColor: window.chartColors.red,
-										fill: false,
-										data: [{
-											x: newDateString(0),
-											y: randomScalingFactor()
-										}, {
-											x: newDateString(2),
-											y: randomScalingFactor()
-										}, {
-											x: newDateString(4),
-										 	y: randomScalingFactor()
-										}, {
-											x: newDateString(5),
-											y: randomScalingFactor()
-										}],
+										fill: false
 									},{
 										label: 'Used',
 										backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
 										borderColor: window.chartColors.grey,
-										fill: false,
-										data: [{
-											x: newDate(0),
-											y: randomScalingFactor()
-										}, {
-											x: newDate(2),
-											y: randomScalingFactor()
-										}, {
-											x: newDate(4),
-											y: randomScalingFactor()
-										}, {
-											x: newDate(5),
-											y: randomScalingFactor()
-										}]
+										fill: false 
 									
-								}, {
+									}, {
 										label: 'Commited',
 										backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
 										borderColor: window.chartColors.green,
-										fill: false,
-										data: [{
-											x: newDate(0),
-											y: randomScalingFactor()
-										}, {
-											x: newDate(2),
-											y: randomScalingFactor()
-										}, {
-											x: newDate(4),
-											y: randomScalingFactor()
-										}, {
-											x: newDate(5),
-											y: randomScalingFactor()
-										}]
+										fill: false
 									}]
 								},
 								options: {
+									maintainAspectRatio: false,
 									responsive: true,
 									title: {
 										display: true,
@@ -919,61 +838,265 @@ html
 											}
 										}],
 										yAxes: [{
+											ticks: {
+												beginAtZero: true,
+												// Include Unit 
+												callback: function(value, index, values) {
+													return  niceBytes(value);
+												}
+											},	
 											display: true,
 											scaleLabel: {
 												display: true,
-												labelString: 'KB'
-											}
-										}]
+												labelString: "Size"
+												}
+										}
+									]
 									}
 								}
 							};
 			 
-	
+			 
 
+
+							const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+								function niceBytes(x){
+
+								let l = 0, n = parseInt(x, 10) || 0;
+
+								while(n >= 1024 && ++l)
+									n = n/1024;
+
+								return(n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
+								}
 					let fetchlog = function(){
-
-
-						Rx.DOM.ajax({ url: '/api/reports/5aeff59c3293e50d8d5508c0/mem', responseType: 'json'})
+						let BuildID="5af94099f30fd6099d5c8f22";
+						//mem
+						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/mem`, responseType: 'json'})
 							.subscribe(
 								function (data) {
 									console.log('Backend connected');
 									
-									let xDate= Array();
-									let yAval = Array();
-									let yUsed = Array();
-									let yComm = Array();
+						 
 									data.response.forEach(function (log) {
 										
-										xDate.push(log.TimeStamp);
-										ykB.push(log.used);
-										//console.log(log);
-
-									});
-
-
-									window.myLine.data.datasets.push({
-											label: 'test',
-											backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
-											borderColor: window.chartColors.red,
-											fill: false,
-											backgroundColor: '#ff0000',
-										data: [{
-											x: newDate(0),
-											y: 0
-										}]
+							 
+											window.myLine.data.datasets[0].data.push({
+														x: log.TimeStamp,
+														y: log.available,
 											});
-										window.myLine.update();
-
-								console.log(xDate[0]);
+											
+											window.myLine.data.datasets[1].data.push({
+														x: log.TimeStamp,
+														y: log.used,
+											});
+											window.myLine.data.datasets[2].data.push({
+														x: log.TimeStamp,
+														y: log.committed,
+											});
+										//	console.log(log);
+									
+											
+									});
+							
+								window.myLine.update();
 								},
 								function (error) {
 								// Log the error
 								console.log(error);
 								}
-					 
-							)	
-							}
+							);
+						
+						//ns
+						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/ns`, responseType: 'json'})
+							.subscribe(
+								function (data2) {
+									console.log('report new space  connected');
+									
+						 
+									data2.response.forEach(function (logns) {
+										
+							 
+											window.myLine2.data.datasets[0].data.push({
+														x: logns.TimeStamp,
+														y: logns.available,
+											});
+											
+											window.myLine2.data.datasets[1].data.push({
+														x: logns.TimeStamp,
+														y: logns.used,
+											});
+											window.myLine2.data.datasets[2].data.push({
+														x: logns.TimeStamp,
+														y: logns.committed,
+											});
+										//	console.log(log);
+									
+										
+									});
+								
+								
+ 
+									window.myLine2.update();
+								},
+								function (error) {
+								// Log the error
+								console.log(error);
+								}
+					 	);
+						//os
+						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/os`, responseType: 'json'})
+							.subscribe(
+								function (data3) {
+									console.log('Backend connected');
+									
+						 
+									data3.response.forEach(function (logos) {
+										
+							 
+											window.myLine3.data.datasets[0].data.push({
+														x: logos.TimeStamp,
+														y: logos.available,
+											});
+											
+											window.myLine3.data.datasets[1].data.push({
+														x: logos.TimeStamp,
+														y: logos.used,
+											});
+											window.myLine3.data.datasets[2].data.push({
+														x: logos.TimeStamp,
+														y: logos.committed,
+											});
+										//	console.log(log);
+								//	
+
+									});
+								
+								
+									window.myLine3.update();
+ 
+								},
+								function (error) {
+								// Log the error
+								console.log(error);
+								}
+							);			 
+					 						//cs
+						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/cs`, responseType: 'json'})
+							.subscribe(
+								function (data4) {
+									console.log('Backend connected');
+									
+						 
+									data4.response.forEach(function (logcs) {
+										
+							 
+											window.myLine4.data.datasets[0].data.push({
+														x: logcs.TimeStamp,
+														y: logcs.available,
+											});
+											
+											window.myLine4.data.datasets[1].data.push({
+														x: logcs.TimeStamp,
+														y: logcs.used,
+											});
+											window.myLine4.data.datasets[2].data.push({
+														x: logcs.TimeStamp,
+														y: logcs.committed,
+											});
+										//	console.log(log);
+									
+
+									});
+								 window.myLine4.update();
+								
+ 
+ 
+								},
+								function (error) {
+								// Log the error
+								console.log(error);
+								}
+					 	);
+					 						//los
+						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/los`, responseType: 'json'})
+							.subscribe(
+								function (data5) {
+									console.log('Backend connected');
+									
+						 
+									data5.response.forEach(function (loglos) {
+										
+							 
+											window.myLine5.data.datasets[0].data.push({
+														x: loglos.TimeStamp,
+														y: loglos.available,
+											});
+											
+											window.myLine5.data.datasets[1].data.push({
+														x: loglos.TimeStamp,
+														y: loglos.used,
+											});
+											window.myLine5.data.datasets[2].data.push({
+														x: loglos.TimeStamp,
+														y: loglos.committed,
+											});
+										//	console.log(log);
+									
+												//
+									});
+							
+								
+									window.myLine5.update();
+ 
+								},
+								function (error) {
+								// Log the error
+								console.log(error);
+								}
+					 	);
+
+						//as
+						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/as`, responseType: 'json'})
+							.subscribe(
+								function (data) {
+									console.log('Backend connected');
+									
+						 
+									data.response.forEach(function (logas) {
+										
+							 
+											window.myLine6.data.datasets[0].data.push({
+														x: logas.TimeStamp,
+														y: logas.available,
+											});
+											
+											window.myLine6.data.datasets[1].data.push({
+														x: logas.TimeStamp,
+														y: logas.used,
+											});
+											window.myLine6.data.datasets[2].data.push({
+														x: logas.TimeStamp,
+														y: logas.committed,
+											});
+										//	console.log(log);
+									
+										//
+									});
+								
+								
+								window.myLine6.update();
+ 
+								},
+								function (error) {
+								// Log the error
+								console.log(error);
+								}
+					 	);
+
+
+					 }
 					//temp	
 				function newDate(days) {
 					return moment().add(days, 'd').toDate();
