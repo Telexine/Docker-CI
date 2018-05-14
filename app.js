@@ -211,24 +211,8 @@ switch (type){
  
         //de-consruct log 
         var obj = JSON.stringify(data);
-
-
-        /*
-        for(var x in obj){
-              // console.log(refTestID);
-
-           
-                  console.log(JSON.parse(obj)[x].name+
-                  JSON.parse(obj)[x].used+
-                  JSON.parse(obj)[x].available+
-                  JSON.parse(obj)[x].committed);
-                
- 
-            
-        }*/
+      
         
-
-
 
         res.status(200).send(obj); 
       }else res.status(404).send("ERROR");
