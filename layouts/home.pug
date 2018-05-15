@@ -931,7 +931,7 @@ html
 						let BuildID=Build;
 						let graphObj =graph;
 						//mem
-						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/${type}`, responseType: 'json'})
+						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/${type}`, responseType: 'json'})
 							.subscribe(
 								function (data) {
 									console.log('Backend connected');

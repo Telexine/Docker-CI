@@ -60,7 +60,7 @@ html
 
 
                                this.on("success", function(file,res) {
-                                    source = new EventSource("/api/build/"+res.toString());
+                                    source = new EventSource("/api/v1/build/"+res.toString());
                                     $('#isupload').val(res);
                                     $('#btncontinue').click();
                                     $('#btncontinue').attr("style","visibility:hidden");

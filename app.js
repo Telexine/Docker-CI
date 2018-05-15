@@ -9,11 +9,11 @@ var fs = require('fs');
 var router = express.Router();
 var pug = require('pug');
 var GcLogParser = require('gc-log-parser');
+
 var SSE = require('sse-nodejs');
- 
 var Rx = require('rxjs/Rx');
 
- 
+var routes = require('./routes');
 //const source = interval(1000);
 
 
@@ -54,8 +54,16 @@ app.use('/node_modules',express.static('node_modules'));
 app.get("/", function (req, res) {
 
   res.render('index', { title: 'Hey', message: 'Hello there!' })
- 
- 
+
+/*
+
+ var pages = req.params.pages;
+ var html = fs.readFileSync('public/views/index.html');
+ res.writeHead(200, {'Content-Type': 'text/html'});
+  res.end(html);
+*/
+
+
 })
 
 engine.initializeMongo();
@@ -63,164 +71,13 @@ engine.initializeMongo();
  
 
 app.use('/api',router);
+app.use('/api/v1',routes);
+
+/*
 let spawn,np;
-let nmon;
-router.get('/build/:buildID' ,function (req, res) {
-  var buildID = req.params.buildID;
-
-  // begin log testing data;
- // let id = engine.createTest(buildID,"uploads/project/testing/"+buildID+"/",1111);
+let nmon; 
+*/
  
- let refTestID;
-
- 
- 
-
-
- 
-  engine.createTest("dev","uploads/project/testing/"+buildID+"/",11111).then((data)=>{
-  if(data){ refTestID=data;
-
-
-
-
-  var parser = new GcLogParser();
-  let cur_pid;
-  var ev = SSE(res);
-  let curFilepath = "uploads/project/testing/"+buildID+"/index.js";
-  exec('npm install');
-  
-   spawn = require('child_process').spawn;
-   np = spawn('node', ["--trace_gc", '--trace_gc_verbose', '--trace_gc_nvp',"--max_old_space_size=100",curFilepath],{detached: true});
-   cur_np =np ;
-
-  np.stdout.on('data', function (data) {
-    // console.log(data.toString().trim());
-    if(/\[[0-9]+:0x/gi.test(data.toString().trim())||/Fast promotion mode:/g.test(data.toString().trim())){
-
-      data.toString().trim().split('\n').forEach(function (line) {
-        parser.parse(line);
-            try{ 
-              var obj = JSON.stringify(parser.stats.spaces);
-              for(var x in obj){
-            //console.log(refTestID);
-              engine.logStat(refTestID
-                  ,JSON.parse(obj)[x].name,
-                  JSON.parse(obj)[x].used,
-                  JSON.parse(obj)[x].available,
-                  JSON.parse(obj)[x].committed)
-              .then((data)=>{
-                //console.log(data);
-              });
-            
-              }
-            }
-            catch(e){
-
-            }
-            
-            });
-            
-          }else{
-
-              ev.sendEvent('console', function () {
-                return replaceAll(data.toString(),"\n"," &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  ")
-              });
-              
-
-        }
-
-
-  });
-
-
-  np.stderr.on('data', function (data) {
-    ev.sendEvent('err', function () {
-      return replaceAll(data.toString(),"\n","<br>")
-    });
-    console.log('stderr: ' + data.toString());
-  });
-
-
-
-  np.on('exit', function (code) {
-
-    // SSE Event sender to close process 
-    ev.sendEvent('end', function () {
-     
-      ev.removeEvent();
-      try{
-      return 'child process exited with code ' + code.toString();
-    
-        }catch(e){
-          return"exit";
-
-        } 
-      
-      });
- 
- 
-  });
-
-
-
-  ev.disconnect(function () {
-      console.log("disconnected");
-      // kill current process
-      cur_np.stdin.pause();
-      cur_np.kill();
-      ev.removeEvent();
-  });
-
-}});
-   
-  })
-//API Report 
-router.get('/reports/:report_ID/:type', function(req, res) {
-  let rid = req.params.report_ID;
-  let type = req.params.type;
-  let dataLog  = [];
-
-/* 
-1. mem - mem allocate
-2. ns - new space 
-3. os - old space 
-4. cs - code space
-5. map - map space
-6. as - all space
-7. los -  Large object space
-*/  
-
-let qtype;
-
-switch (type){
-    case "mem" : qtype ="Memory allocator";break;
-    case "ns" : qtype ="New space";break;
-    case "os" : qtype ="Old space";break;
-    case "cs" : qtype ="Code space";break;
-    case "map" : qtype ="Map space";break;
-    case "los" : qtype ="Large object space";break;
-    case "as" : qtype ="All spaces";break;
-    default: res.send("error").statusCode('400'); // error
-}
-
-
-  engine.getReport(qtype,rid).then((data)=>{
-    //get log promise 
-      if(data) {
- 
-        //de-consruct log 
-        var obj = JSON.stringify(data);
-      
-        
-
-        res.status(200).send(obj); 
-      }else res.status(404).send("ERROR");
-    });
-   
-
-
-});
 
 router.post('/upload', function(req, res) {
   if (!req.files)
@@ -379,12 +236,8 @@ let createDockerCompose = function(projectfolder,thisTestPath,services){
 
 }
 
-function replaceAll(str, find, replace) {
-  return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
-}
-function escapeRegExp(str) {
-    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-}
+
+
 
 http.createServer(app).listen(3333, function () {
     //engine.addTest('ID1','pathtofile/','2222');
