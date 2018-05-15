@@ -761,44 +761,21 @@ html
 		script.
 
 			window.onload = function() {
-				let d = "5af94099f30fd6099d5c8f22";
-				window.myLine  = {};
-				var ctx = document.getElementById('memChart').getContext('2d');
-				window.myLine[0] = new Chart(ctx, cfg[0]);
+				// Fill charts
+				let d = "5af940967d24cd0985a5a407";
+				window.myLine  = {};let ctx = {};
+				let logtype = ["mem","ns","os","cs","los","as"];
+				let logdesc = ["Memory Allocator","New space","Old space","Code space","Large object space","All spaces"]
+				for(tp in logtype){
+					ctx[tp] = document.getElementById(logtype[tp]+'Chart').getContext('2d');
+					window.myLine[tp] = new Chart(ctx[tp], cfg[tp]);
+					window.myLine[tp].options.title.text = logdesc[tp];
+					fetchlog2(d,window.myLine[tp],logtype[tp]);
+				}
 
-				var ctxns = document.getElementById('nsChart').getContext('2d');
-				window.myLine[1] = new Chart(ctxns, cfg[1]);
-				
-				window.myLine[1].options.title.text = "New space";
 
-				var ctxos = document.getElementById('osChart').getContext('2d');
-				window.myLine[2] = new Chart(ctxos, cfg[2]);
-				window.myLine[2].options.title.text = "Old space";
-				var ctxcs = document.getElementById('csChart').getContext('2d');
-				window.myLine[3] = new Chart(ctxcs, cfg[3]);
-				window.myLine[3].options.title.text = "Code space";
-				var ctxlos = document.getElementById('losChart').getContext('2d');
-				window.myLine[4] = new Chart(ctxlos, cfg[4]);
-				window.myLine[4].options.title.text = "Large object space";
-				var ctxas = document.getElementById('asChart').getContext('2d');
-				window.myLine[5] = new Chart(ctxas, cfg[5]);		 
-				window.myLine[5].options.title.text = "All spaces";		  
-
-				fetchlog2(d,window.myLine[0],"mem");
-				fetchlog2(d,window.myLine[1],"ns");
-			 	fetchlog2(d,window.myLine[2],"os");
-			 	fetchlog2(d,window.myLine[3],"cs");
-			 	fetchlog2(d,window.myLine[4],"los");
-				fetchlog2(d,window.myLine[5],"as");
-						  
 
 			};
-
-			$(document).ready(function()
-			{
-				
-			});
-
 
 
 
