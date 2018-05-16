@@ -4,12 +4,11 @@ html
       include partials/navbar.pug
       include home.pug
       #codeBuild-controller.portlet.light.tasks-widget.bordered
-             | 
-             #btnTobottom.btn.purple(style="margin: 4px;")
+            #btnTobottom.btn.purple(style="margin: 4px;")
                   i.fa.fa-angle-double-down 
-             #btnRedStop.btn.red(style="margin: 4px;") Stop
+            #btnRedStop.btn.red(style="margin: 4px;") Stop
                   i.fa.fa-stop
-             | 00:22 seconds
+            span#timer 00:00 Seconds
       link(rel='stylesheet', type='text/css', href='public/js/loading-bar.css')
       link(href='public/assets/global/plugins/bootstrap-toastr/toastr.css', rel='stylesheet')
       block script
@@ -50,7 +49,6 @@ html
                               
                                     formData.append("id", "uid1");
                                     formData.append("proj", $('#projname').val()+"");
-
                                     let service = '1,0,0' ; //$('#checkboxNodeJS').val();
                                     formData.append("service", service);
 
@@ -61,20 +59,30 @@ html
 
                                this.on("success", function(file,res) {
                                     source = new EventSource("/api/v1/build/"+res.toString());
+                                    
                                     $('#isupload').val(res);
                                     $('#btncontinue').click();
                                     $('#btncontinue').attr("style","visibility:hidden");
                                     $('#btnback').attr("style",'visibility:hidden');
                                    
-                                     source.addEventListener('console', function (result) {
+                                    source.addEventListener('console', function (result) {
                                           buildConsoleLog(result.data,'console');
+                                    });
+                                    if(!currentBuild)
+                                    source.addEventListener('unitID', function (result) {
+                                           currentBuild =  result.data.replace(/^"(.*)"$/, '$1'); 
+                                          
                                     });
 
                                      source.addEventListener('err', function (result) {
+                                          clearInterval(loadTimer);
+                                          clearInterval(t);
                                           buildConsoleLog(`<br><br>################################################<br>
                                                             " ${result.data}<br>################################################`,'error');
                                     });
                                      source.addEventListener('end', function (result) {
+                                          clearInterval(loadTimer);
+                                          clearInterval(t);
                                           buildConsoleLog(`<br><br>################################################<br>
                                                             " ${result.data}<br>################################################`,'end');
 
@@ -92,19 +100,25 @@ html
                         maxFilesize: 50, // MB
 
                   };
-                   var loadTimer,build;
+                   var loadTimer,build,currentBuild;
+                  
+
                   $(function() {
                         $('#btnRedStop').bind( "click", function() {
                               let btn = $(this);
                               source.close();
                               toastr.warning('By User',"Canceled Build");
                               clearInterval(loadTimer);
+                              clearInterval(t);
                               $('#btnRedStop').addClass("disabled");
                               btn.css("pointer-events", "none");
+                              // Load GC report 
+
                               setTimeout(function (){
                                     // loade report page 
                                 $('#btncontinue').click();
-
+                                LoadAllGraph(currentBuild);
+                                 $('#codeBuild-controller').css("visibility", "hidden");
                               }, 1000); 
                         });
                          
@@ -151,9 +165,9 @@ html
 
                         switch(state){
                               case 'console': cmd.setAttribute("style","color:#32c146;");
-                              break;
-                              case 'error':  cmd.setAttribute("style","color:#d73a49;padding-top:20px");  
-                              break;
+                                    break;
+                              case 'error':  cmd.setAttribute("style","color:#d73a49;padding-top:20px");    
+                                    break;
                               case 'end': 
                                     c1.innerHTML ="";
                                     cmd.setAttribute("style","color:#FFFFF;padding-top:20px");  
@@ -161,7 +175,7 @@ html
                                     build.text("Build Finished");
                                     $('.bufferload').attr("style","display:none;");
                                     $('#btncontinue').attr("style","visibility:visible");
-                              break;
+                                    break;
 
                         }
 
@@ -174,10 +188,7 @@ html
                   }
 
 
-                  function loadReport(){
 
-                        
-                  }
 
                   // etc function
                   function addZero(i) {
@@ -187,4 +198,25 @@ html
                         return i;
                         }
 
-                 
+
+                  //timer
+                  let    seconds = 0, minutes = 0, hours = 0,t;
+
+                 function add() {
+                              seconds++;
+                              if (seconds >= 60) {
+                                    seconds = 0;
+                                    minutes++;
+                                    if (minutes >= 60) {
+                                          minutes = 0;
+                                          hours++;
+                                    }
+                              }
+                              
+                              $("#timer").text((hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds) +" Seconds  ");
+                              timer();
+                  }
+                  function timer() {
+                        t = setTimeout(add, 1000);
+                  }
+                  timer();

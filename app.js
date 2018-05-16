@@ -1,5 +1,4 @@
- 
-var express = require('express');
+ var express = require('express');
 var config = require('./service/config');
 var app = express();
 var path = require('path');
@@ -92,12 +91,14 @@ let createDockerCompose = function(projectfolder,thisTestPath,services){
 }
 
 
+app.set('port', process.env.PORT || 3333);
 
+http.createServer(app).listen(app.get('port'),
+  function(){
+    console.log("Server server listening on port " + app.get('port'));
+});
+ 
 
-http.createServer(app).listen(3333, function () {
-    //engine.addTest('ID1','pathtofile/','2222');
-    console.log('Server is Runing on localhost:3333');
-})
 process.on('SIGINT', function() {
   console.log( "\n shutting down  (Ctrl-C)" );
   engine.closingProcess();

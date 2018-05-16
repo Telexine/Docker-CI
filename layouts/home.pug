@@ -264,7 +264,7 @@ html
 												.alert.alert-success.display-none
 													button.close(data-dismiss='alert')
 													|  Your form validation is successful!
-												#tab4.tab-pane.active 
+												#tab1.tab-pane.active 
 													h3.block Provide your Project details
 													.form-group
 														label.control-label.col-md-3
@@ -349,7 +349,7 @@ html
 														.bufferload worker $
 															span.pulse  _
 												
-												#tab1.tab-pane
+												#tab4.tab-pane
 													include partials/result.pug
 										
 										.form-actions
@@ -760,29 +760,22 @@ html
 		script(src='public/js/script.js' type='text/javascript')
 		script.
 
-			window.onload = function() {
-				// Fill charts
-				let d = "5af940967d24cd0985a5a407";
+		
+			let LoadAllGraph = function(build_id){
+				if(!build_id) return console.log("Can't find Build ID");;
 				window.myLine  = {};let ctx = {};
 				let logtype = ["mem","ns","os","cs","los","as"];
 				let logdesc = ["Memory Allocator","New space","Old space","Code space","Large object space","All spaces"]
 				for(tp in logtype){
 					ctx[tp] = document.getElementById(logtype[tp]+'Chart').getContext('2d');
+					console.log(ctx[tp]);
 					window.myLine[tp] = new Chart(ctx[tp], cfg[tp]);
 					window.myLine[tp].options.title.text = logdesc[tp];
-					fetchlog2(d,window.myLine[tp],logtype[tp]);
+					fetchlog(build_id,window.myLine[tp],logtype[tp]);
 				}
-
-
-
 			};
-
-
-
-			
-							var color = Chart.helpers.color;
-
-						 var cfg = {};
+						var color = Chart.helpers.color;
+						var cfg = {};
 
 						 for(let i = 0 ; i<6;i++){
 							  cfg[i] = {
@@ -848,89 +841,23 @@ html
 								}
 							
 							};}
-			 					var config2 = {
-								
-								type: 'line',
-								data: {
-									datasets: [{
-										label: 'Avaliable',
-										backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
-										borderColor: window.chartColors.red,
-										fill: false
-									},{
-										label: 'Used',
-										backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
-										borderColor: window.chartColors.grey,
-										fill: false 
-									
-									}, {
-										label: 'Commited',
-										backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
-										borderColor: window.chartColors.green,
-										fill: false
-									}]
-								},
-								options: {
-									maintainAspectRatio: false,
-									responsive: true,
-									title: {
-										display: true,
-										text: 'Memory Allocator'
-									},
-									scales: {
-										xAxes: [{
-											type: 'time',
-											display: true,
-											scaleLabel: {
-												display: true,
-												labelString: 'Date'
-											},
-											ticks: {
-												major: {
-													fontStyle: 'bold',
-													fontColor: '#FF0000'
-												}
-											}
-										}],
-										yAxes: [{
-											ticks: {
-												beginAtZero: true,
-												// Include Unit 
-												callback: function(value, index, values) {
-													return  niceBytes(value);
-												}
-											},	
-											display: true,
-											scaleLabel: {
-												display: true,
-												labelString: "Size"
-												}
-										}
-									]
-									}
-								}
-							};
-			 
-
-
 							const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
 								function niceBytes(x){
+									let l = 0, n = parseInt(x, 10) || 0;
 
-								let l = 0, n = parseInt(x, 10) || 0;
-
-								while(n >= 1024 && ++l)
-									n = n/1024;
-
-								return(n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
+									while(n >= 1024 && ++l)
+										n = n/1024;
+									return(n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
 								}
 
 
 
-						let fetchlog2 = function(Build,graph/* window.myLine*/,type){
+					let fetchlog = function(Build,graph,type){
 						let BuildID=Build;
 						let graphObj =graph;
 						//mem
+						console.log(BuildID);
 						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/${type}`, responseType: 'json'})
 							.subscribe(
 								function (data) {
@@ -966,236 +893,6 @@ html
 								}
 							);
 						}
-
-
-
-					let fetchlog = function(){
-						let BuildID="5af94099f30fd6099d5c8f22";
-						//mem
-						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/mem`, responseType: 'json'})
-							.subscribe(
-								function (data) {
-									console.log('Backend connected');
-									
-						 
-									data.response.forEach(function (log) {
-										
-							 
-											window.myLine.data.datasets[0].data.push({
-														x: log.TimeStamp,
-														y: log.available,
-											});
-											
-											window.myLine.data.datasets[1].data.push({
-														x: log.TimeStamp,
-														y: log.used,
-											});
-											window.myLine.data.datasets[2].data.push({
-														x: log.TimeStamp,
-														y: log.committed,
-											});
-										//	console.log(log);
-									
-											
-									});
-							
-								window.myLine.update();
-								},
-								function (error) {
-								// Log the error
-								console.log(error);
-								}
-							);
-						
-						//ns
-						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/ns`, responseType: 'json'})
-							.subscribe(
-								function (data2) {
-									console.log('report new space  connected');
-									
-						 
-									data2.response.forEach(function (logns) {
-										
-							 
-											window.myLine2.data.datasets[0].data.push({
-														x: logns.TimeStamp,
-														y: logns.available,
-											});
-											
-											window.myLine2.data.datasets[1].data.push({
-														x: logns.TimeStamp,
-														y: logns.used,
-											});
-											window.myLine2.data.datasets[2].data.push({
-														x: logns.TimeStamp,
-														y: logns.committed,
-											});
-										//	console.log(log);
-									
-										
-									});
-								
-								
- 
-									window.myLine2.update();
-								},
-								function (error) {
-								// Log the error
-								console.log(error);
-								}
-					 	);
-						//os
-						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/os`, responseType: 'json'})
-							.subscribe(
-								function (data3) {
-									console.log('Backend connected');
-									
-						 
-									data3.response.forEach(function (logos) {
-										
-							 
-											window.myLine3.data.datasets[0].data.push({
-														x: logos.TimeStamp,
-														y: logos.available,
-											});
-											
-											window.myLine3.data.datasets[1].data.push({
-														x: logos.TimeStamp,
-														y: logos.used,
-											});
-											window.myLine3.data.datasets[2].data.push({
-														x: logos.TimeStamp,
-														y: logos.committed,
-											});
-										//	console.log(log);
-								//	
-
-									});
-								
-								
-									window.myLine3.update();
- 
-								},
-								function (error) {
-								// Log the error
-								console.log(error);
-								}
-							);			 
-					 						//cs
-						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/cs`, responseType: 'json'})
-							.subscribe(
-								function (data4) {
-									console.log('Backend connected');
-									
-						 
-									data4.response.forEach(function (logcs) {
-										
-							 
-											window.myLine4.data.datasets[0].data.push({
-														x: logcs.TimeStamp,
-														y: logcs.available,
-											});
-											
-											window.myLine4.data.datasets[1].data.push({
-														x: logcs.TimeStamp,
-														y: logcs.used,
-											});
-											window.myLine4.data.datasets[2].data.push({
-														x: logcs.TimeStamp,
-														y: logcs.committed,
-											});
-										//	console.log(log);
-									
-
-									});
-								 window.myLine4.update();
-								
- 
- 
-								},
-								function (error) {
-								// Log the error
-								console.log(error);
-								}
-					 	);
-					 						//los
-						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/los`, responseType: 'json'})
-							.subscribe(
-								function (data5) {
-									console.log('Backend connected');
-									
-						 
-									data5.response.forEach(function (loglos) {
-										
-							 
-											window.myLine5.data.datasets[0].data.push({
-														x: loglos.TimeStamp,
-														y: loglos.available,
-											});
-											
-											window.myLine5.data.datasets[1].data.push({
-														x: loglos.TimeStamp,
-														y: loglos.used,
-											});
-											window.myLine5.data.datasets[2].data.push({
-														x: loglos.TimeStamp,
-														y: loglos.committed,
-											});
-										//	console.log(log);
-									
-												//
-									});
-							
-								
-									window.myLine5.update();
- 
-								},
-								function (error) {
-								// Log the error
-								console.log(error);
-								}
-					 	);
-
-						//as
-						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/as`, responseType: 'json'})
-							.subscribe(
-								function (data) {
-									console.log('Backend connected');
-									
-						 
-									data.response.forEach(function (logas) {
-										
-							 
-											window.myLine6.data.datasets[0].data.push({
-														x: logas.TimeStamp,
-														y: logas.available,
-											});
-											
-											window.myLine6.data.datasets[1].data.push({
-														x: logas.TimeStamp,
-														y: logas.used,
-											});
-											window.myLine6.data.datasets[2].data.push({
-														x: logas.TimeStamp,
-														y: logas.committed,
-											});
-										//	console.log(log);
-									
-										//
-									});
-								
-								
-								window.myLine6.update();
- 
-								},
-								function (error) {
-								// Log the error
-								console.log(error);
-								}
-					 	);
-
-
-					 }
 					//temp	
 				function newDate(days) {
 					return moment().add(days, 'd').toDate();

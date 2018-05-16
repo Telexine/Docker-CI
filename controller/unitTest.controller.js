@@ -15,6 +15,9 @@ module.exports ={
             engine.createTest("dev","uploads/project/testing/"+buildID+"/",11111).then((data)=>{
             if(data){ 
               refTestID=data;
+
+
+
               var parser = new GcLogParser();
               let cur_pid;
               var ev = SSE(res);
@@ -24,7 +27,13 @@ module.exports ={
               spawn = require('child_process').spawn;
               np = spawn('node', ["--trace_gc", '--trace_gc_verbose', '--trace_gc_nvp',"--max_old_space_size=100",curFilepath],{detached: true});
               cur_np =np ;
-            
+              
+              //send Build ID to client 
+              ev.sendEvent('unitID', function () {
+                return refTestID;
+              });
+
+
               np.stdout.on('data', function (data) {
                 // console.log(data.toString().trim());
                 if(/\[[0-9]+:0x/gi.test(data.toString().trim())||/Fast promotion mode:/g.test(data.toString().trim())){
@@ -35,8 +44,8 @@ module.exports ={
                           var obj = JSON.stringify(parser.stats.spaces);
                           for(var x in obj){
                         //console.log(refTestID);
-                          engine.logStat(refTestID
-                              ,JSON.parse(obj)[x].name,
+                          engine.logStat(refTestID,
+                              JSON.parse(obj)[x].name,
                               JSON.parse(obj)[x].used,
                               JSON.parse(obj)[x].available,
                               JSON.parse(obj)[x].committed)
@@ -63,7 +72,7 @@ module.exports ={
             
             
               });
-            
+
             
               np.stderr.on('data', function (data) {
                 ev.sendEvent('err', function () {
