@@ -323,8 +323,8 @@ html
 													.form-group
 														.col-md-12(style='padding:20px')
 															
-															form(required='',action='/api/upload', method='post', enctype='multipart/form-data', style='display:none')
-															form#myAwesomeDropzone.dropzone.dropzone-file-area.dz-clickable(action='/api/upload', method='post', enctype='multipart/form-data', required='')
+															form(required='',action='/api/v1/upload', method='post', enctype='multipart/form-data', style='display:none')
+															form#myAwesomeDropzone.dropzone.dropzone-file-area.dz-clickable(action='/api/v1/upload', method='post', enctype='multipart/form-data', required='')
 																h3 Drop your Project here
 																h5 File much less than 50 MB
 																.fallback
@@ -972,7 +972,7 @@ html
 					let fetchlog = function(){
 						let BuildID="5af94099f30fd6099d5c8f22";
 						//mem
-						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/mem`, responseType: 'json'})
+						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/mem`, responseType: 'json'})
 							.subscribe(
 								function (data) {
 									console.log('Backend connected');
@@ -1008,7 +1008,7 @@ html
 							);
 						
 						//ns
-						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/ns`, responseType: 'json'})
+						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/ns`, responseType: 'json'})
 							.subscribe(
 								function (data2) {
 									console.log('report new space  connected');
@@ -1045,7 +1045,7 @@ html
 								}
 					 	);
 						//os
-						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/os`, responseType: 'json'})
+						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/os`, responseType: 'json'})
 							.subscribe(
 								function (data3) {
 									console.log('Backend connected');
@@ -1082,7 +1082,7 @@ html
 								}
 							);			 
 					 						//cs
-						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/cs`, responseType: 'json'})
+						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/cs`, responseType: 'json'})
 							.subscribe(
 								function (data4) {
 									console.log('Backend connected');
@@ -1119,7 +1119,7 @@ html
 								}
 					 	);
 					 						//los
-						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/los`, responseType: 'json'})
+						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/los`, responseType: 'json'})
 							.subscribe(
 								function (data5) {
 									console.log('Backend connected');
@@ -1157,7 +1157,7 @@ html
 					 	);
 
 						//as
-						Rx.DOM.ajax({ url: `/api/reports/${BuildID}/as`, responseType: 'json'})
+						Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/as`, responseType: 'json'})
 							.subscribe(
 								function (data) {
 									console.log('Backend connected');

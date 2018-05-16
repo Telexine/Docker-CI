@@ -8,20 +8,15 @@ var http = require('http');
 var fs = require('fs');
 var router = express.Router();
 var pug = require('pug');
-var GcLogParser = require('gc-log-parser');
 
-var SSE = require('sse-nodejs');
-var Rx = require('rxjs/Rx');
 
 var routes = require('./routes');
-//const source = interval(1000);
+
 
 
 
 //file handler
 const fileUpload = require('express-fileupload');
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
 const engine = require('./engine/telexine')
 
 /**\
@@ -55,7 +50,7 @@ app.get("/", function (req, res) {
 
   res.render('index', { title: 'Hey', message: 'Hello there!' })
 
-/*
+/*   // html 
 
  var pages = req.params.pages;
  var html = fs.readFileSync('public/views/index.html');
@@ -68,143 +63,10 @@ app.get("/", function (req, res) {
 
 engine.initializeMongo();
 //API
- 
-
-app.use('/api',router);
+app.use('/api',router);  // beta 
 app.use('/api/v1',routes);
 
-/*
-let spawn,np;
-let nmon; 
-*/
  
-
-router.post('/upload', function(req, res) {
-  if (!req.files)
-    return res.status(400).send('No files were uploaded.');
-
-  let Id = req.body.id; // userid
-  let projectname = req.body.proj;
-  let service = req.body.service;  // "node,mango,mysql : 1,0,0"
-  let sampleFile = req.files.file;
-  let filename =  Date.now()+".zip";
-
-  sampleFile.mv(__dirname+'/uploads/project/'+ filename, function(err) {
-    if (err){
-      return res.status(500).send(err);
-    }
-
-    exec('ls uploads/project', (error, stdout, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`);
-        return;
-      }
-      
-      //file exist Extracting
-      console.log("file exist Extracting");
-      thisPath = "uploads/project/"+filename;
-      thisTestPath = "uploads/project/testing/"+filename.replace(".zip","");
-      if(stdout.replace(/(\r\n\t|\n|\r\t)/gm,"").includes(filename)){
-          cmd = 'unzip -j '+ thisPath+" -d "+ thisTestPath ;
-
-          exec(cmd ,
-           (error, stdout, stderr) => {
-                  if(error){
-                      console.error(`exec error: ${error}`);
-                      return;
-                  }
-
- 
-                  return res.status(200).send(filename.replace(".zip",""));
-                   
-          });
-        
-
-
-      }
-
-      //console.log(`stderr: ${stderr}`);
-    });
-
-
-
-
-
-    
-  });
-});
-
-
-async function zxfv(filename) {
-
- 
- /*
-    exec('ls uploads/project', (error, stdout, stderr) => {
-
-    });*/
-    // check file is exist
-    exec('ls uploads/project', (error, stdout, stderr) => {
-        if (error) {
-          console.error(`exec error: ${error}`);
-          return;
-        }
-        
-        //file exist Extracting
-        console.log("file exist Extracting");
-        thisPath = "uploads/project/"+filename;
-        thisTestPath = "uploads/project/testing/"+filename.replace(".zip","");
-        if(stdout.replace(/(\r\n\t|\n|\r\t)/gm,"").includes(filename)){
-            cmd = 'unzip -j '+ thisPath+" -d "+ thisTestPath ;
-
-            exec(cmd ,
-             (error, stdout, stderr) => {
-                    if(error){
-                        console.error(`exec error: ${error}`);
-                        return;
-                    }
-
-                    console.log("path"+thisTestPath);
-                    return thisTestPath;
-            });
-          
-
-
-        }
- 
-        //console.log(`stderr: ${stderr}`);
-      });
- 
-}
-
-let runNsdsdfdeProject = function(thisTestPath){
-  exec('npm install');
-  var spawn = require('child_process').spawn,
-    np    = spawn('node', [thisTestPath+"/index.js"]);
-
-
-
-
-
-
-  np.stdout.on('data', function (data) {
-
- 
-
-    console.log('stdout: ' + data.toString());
-  });
-
-  np.stderr.on('data', function (data) {
-    console.log('stderr: ' + data.toString());
-  });
-
-  np.on('exit', function (code) {
-    console.log('child process exited with code ' + code.toString());
-  });
-
-
-}
-
-
 let createDockerCompose = function(projectfolder,thisTestPath,services){
 
 // service 100 = node js 
@@ -227,13 +89,6 @@ let createDockerCompose = function(projectfolder,thisTestPath,services){
           - /usr/src/app/proj${projectfolder}/node_modules
               
 ' > ${thisTestPath}/docker-compose.yml`);
-
-
-
-
-
-
-
 }
 
 
