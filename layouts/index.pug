@@ -3,6 +3,7 @@ html
       include partials/header.pug
       include partials/navbar.pug
       include home.pug
+
       #codeBuild-controller.portlet.light.tasks-widget.bordered
             #btnTobottom.btn.purple(style="margin: 4px;")
                   i.fa.fa-angle-double-down 
@@ -10,9 +11,10 @@ html
                   i.fa.fa-stop
             span#timer 00:00 Seconds
       link(rel='stylesheet', type='text/css', href='public/js/loading-bar.css')
+      link(type='text/css', rel='stylesheet', href='node_modules/firebaseui/dist/firebaseui.css')
       link(href='public/assets/global/plugins/bootstrap-toastr/toastr.css', rel='stylesheet')
       block script
-
+            script(src='node_modules/firebaseui/dist/firebaseui.js')
             script(src='public/assets/global/plugins/bootstrap-toastr/toastr.js')
             script(src='public/assets/global/plugins/select2/js/select2.full.min.js', type='text/javascript')
             script(src='public/assets/global/plugins/jquery-validation/js/jquery.validate.min.js', type='text/javascript')
@@ -28,6 +30,7 @@ html
             // RXJS 
             script(src="node_modules/rx/dist/rx.lite.js" type="text/javascript")
             script(src="node_modules/rx-dom/dist/rx.dom.js" type="text/javascript")
+            script(src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js")
             script.
                   let _file;
                   let source;
@@ -223,3 +226,94 @@ html
                         t = setTimeout(add, 1000);
                   }
                   timer();
+
+                  // FirebaseUI config.
+
+                    // Initialize Firebase
+                        var config = {
+                        apiKey: "AIzaSyA1uuiJ-E6DVegxReKrpMD5zNiWZfMVcIw",
+                        authDomain: "telexi-5888d.firebaseapp.com",
+                        databaseURL: "https://telexi-5888d.firebaseio.com",
+                        projectId: "telexi-5888d",
+                        storageBucket: "telexi-5888d.appspot.com",
+                        messagingSenderId: "861459487613"
+                        };
+                        firebase.initializeApp(config);
+
+                  var uiConfig = {
+                        signInOptions: [
+                        // Leave the lines as is for the providers you want to offer your users.
+                        firebase.auth.EmailAuthProvider.PROVIDER_ID
+                  
+                        ],signInSuccessUrl:'/'
+
+
+                        , callbacks: {
+                        signInSuccessUrl: function(currentUser, credential, redirectUrl){
+
+                              unblur();
+                              return true;
+                              }
+
+                        },
+                        // Terms of service url.
+                        tosUrl: '/'
+                  };
+                  // Initialize the FirebaseUI Widget using Firebase.
+                  var ui = new firebaseui.auth.AuthUI(firebase.auth());
+                  // The start method will wait until the DOM is loaded.
+
+
+                  ////////////////
+                  // global var
+                  ///////////////
+                  let _Username ;
+                  
+                  firebase.auth().onAuthStateChanged(function(user) {
+                        if (!user) { 
+                        // not login , show login, register modal
+                              blur();
+                              ui.start('#firebaseui-auth-container', uiConfig)
+                        }
+                        else{
+                              //This account is Loggged, tell state to firebase
+                             // $('#avatarText').text(user.displayName + " : "+  user.email);
+                              // set ref() path to user status of user 
+                          
+                              var amOnline = firebase.database().ref(".info/connected");
+                              var userRef = firebase.database().ref("presence/" + user.displayName+"/state");
+
+
+                              //listener on user connect,disconnect
+                              amOnline.on('value', function(snapshot) {
+                              if (snapshot.val()) {
+                              //on quit  set to offline
+                              userRef.onDisconnect().set("Offline");
+                              //on normal (connected) set to Online
+                              userRef.set("Online");
+                              
+                              let _Username = user.displayName;
+                              con = $('#NAME')
+                               con.text(_Username);
+                              unblur();
+                              }
+                              });
+                              }
+                  });
+
+                  let blur = function(){
+                               let con = $('#mainContainer');
+                               con.addClass("blur");
+                               con = $('#pageHeader')
+                               con.addClass("blur");
+                  }
+                  let unblur = function(){
+                              let con = $('#mainContainer');
+                               con.removeClass("blur");
+                               con = $('#pageHeader')
+                               con.removeClass("blur");
+                               
+                  }
+
+
+                  

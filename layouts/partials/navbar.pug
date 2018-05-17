@@ -1,6 +1,6 @@
 body.page-md
     // BEGIN HEADER
-    header.page-header
+    header#pageHeader.page-header
         nav.navbar(role='navigation')
             .container-fluid
                 .havbar-header
@@ -10,6 +10,7 @@ body.page-md
                     // END LOGO
                     // BEGIN TOPBAR ACTIONS
                     .topbar-actions
+                        span#NAME.username(style="color:#aeb2c4;")
                         // END HEADER SEARCH BOX
                         // BEGIN USER PROFILE
                         .btn-group-img.btn-group
@@ -17,31 +18,7 @@ body.page-md
                                 img(src='public/assets/layouts/layout5/img/avatar1.jpg', alt='')
                             ul.dropdown-menu-v2(role='menu')
                                 li
-                                    a(href='page_user_profile_1.html')
-                                        i.icon-user
-                                        |  My Profile
-                                        span.badge.badge-danger 1
-                                li
-                                    a(href='app_calendar.html')
-                                        i.icon-calendar
-                                        |  My Calendar
-                                li
-                                    a(href='app_inbox.html')
-                                        i.icon-envelope-open
-                                        |  My Inbox
-                                        span.badge.badge-danger  3
-                                li
-                                    a(href='app_todo_2.html')
-                                        i.icon-rocket
-                                        |  My Tasks
-                                        span.badge.badge-success  7
-                                li.divider
-                                li
-                                    a(href='page_user_lock_1.html')
-                                        i.icon-lock
-                                        |  Lock Screen
-                                li
-                                    a(href='page_user_login_1.html')
+                                    a(href='javascript:;' onClick="firebase.auth().signOut();")
                                         i.icon-key
                                         |  Log Out
                         // END USER PROFILE
