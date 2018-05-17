@@ -12,7 +12,10 @@ module.exports ={
 
             var buildID = req.params.buildID;
             let refTestID;
-            engine.createTest("dev","uploads/project/testing/"+buildID+"/",11111).then((data)=>{
+            let username = req.params.username;
+            let service = req.params.service;
+            console.log(service);
+            engine.createTest(username,"uploads/project/testing/"+buildID+"/",service).then((data)=>{
             if(data){ 
               refTestID=data;
 
@@ -28,6 +31,22 @@ module.exports ={
               np = spawn('node', ["--trace_gc", '--trace_gc_verbose', '--trace_gc_nvp',"--max_old_space_size=100",curFilepath],{detached: true});
               cur_np =np ;
               
+
+
+
+              // Audit Mode 
+              if(service){
+                auditor  = require('child_process').spawn;
+                auditProcess  = auditor('node', ["--trace_gc", '--trace_gc_verbose', '--trace_gc_nvp',"--max_old_space_size=100",curFilepath],{detached: true});
+
+
+
+
+              }
+
+
+
+
               //send Build ID to client 
               ev.sendEvent('unitID', function () {
                 return refTestID;
@@ -116,7 +135,7 @@ module.exports ={
 
         let Id = req.body.id; // userid
         let projectname = req.body.proj;
-        let service = req.body.service;  // "node,mango,mysql : 1,0,0"
+        let service = req.body.service;  // "node,Express : 1,0,0"
         let sampleFile = req.files.file;
         let filename =  Date.now()+".zip";
         
@@ -133,7 +152,7 @@ module.exports ={
             }
             
             //file exist Extracting
-            console.log("file exist Extracting");
+            console.log("file Extracting");
             thisPath = "uploads/project/"+filename;
             thisTestPath = "uploads/project/testing/"+filename.replace(".zip","");
             if(stdout.replace(/(\r\n\t|\n|\r\t)/gm,"").includes(filename)){
@@ -145,6 +164,12 @@ module.exports ={
                             console.error(`exec error: ${error}`);
                             return;
                         }
+                        if(service=='1,1,0'){
+                          
+                        }
+
+
+
                         return res.status(200).send(filename.replace(".zip",""));     
                 });
             }

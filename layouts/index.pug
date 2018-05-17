@@ -52,8 +52,10 @@ html
                               
                                     formData.append("id", "uid1");
                                     formData.append("proj", $('#projname').val()+"");
-                                    let service = '1,0,0' ; //$('#checkboxNodeJS').val();
-                                    formData.append("service", service);
+  
+                                    
+                                    
+                                    //formData.append("service", service);
 
                                     console.log(formData);
 
@@ -61,8 +63,11 @@ html
 
 
                                this.on("success", function(file,res) {
-                                    source = new EventSource("/api/v1/build/"+res.toString());
-                                    
+                                    source = new EventSource("/api/v1/build/"+`${res.toString()}/${_Username}/${_audit? "true":"false"}`);
+
+                                    // check service 
+                                    let service = `1,${_audit? "1":"0"},0` ; 
+
                                     $('#isupload').val(res);
                                     $('#btncontinue').click();
                                     $('#btncontinue').attr("style","visibility:hidden");
@@ -103,7 +108,7 @@ html
                         maxFilesize: 50, // MB
 
                   };
-                   var loadTimer,build,currentBuild;
+                   var loadTimer,build,currentBuild,_audit = false/*for checkbox*/;
                   
 
                   $(function() {
@@ -292,7 +297,7 @@ html
                               //on normal (connected) set to Online
                               userRef.set("Online");
                               
-                              let _Username = user.displayName;
+                              _Username = user.displayName;
                               con = $('#NAME')
                                con.text(_Username);
                               unblur();

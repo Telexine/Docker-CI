@@ -11,7 +11,7 @@ var observables = require('mongoose-observables');
 var CISchema = mongoose.Schema({
     user_id: String,
     path: String,
-    port: Number
+    audit: Boolean
 
   });
  
@@ -124,13 +124,13 @@ exports.getReport = function(type,testID){
 
 
 //create function 
-exports.createTest = function(User_id,Path,Port){
+exports.createTest = function(User_id,Path,Audit){
   return new Promise(resolve=>{
 observables.creator
     .create(Unit_test, {
       user_id: User_id,
       path: Path,
-      port: Port
+      audit: Audit
     })
     .subscribe(Unit_test =>{ 
       resolve(Unit_test._id);}, 
@@ -164,65 +164,6 @@ addStat = function(unit_test,name,used,available,committed) {
 
  
 
-
-
-  addTest = function(User_id,Path,Port,res) {
-    var rec = new Unit_test({
-        user_id: User_id,
-        path: Path,
-        port: Port
-    });
-    
-    rec.save(function (err, savc) {
-      if (err) return console.error(err);
-       var id = rec._id;
-
-        let rec2 = new Stat({
-        Unit_test: id,
-        name: "",
-        used: "",
-        available: "",
-        committed: "",
-          
-      });
-       vid = rec._id;
-      
-       rec2.save(function(err,id) {console.log(id._id)
-        //es.status(200).send(id._id);
-      
-      });
-         
-        
-    });
-
-
-  }
-
-
-
-
-/**
- * 
- * 
- * 
- var spawn = require('child_process').spawn;
-var child = spawn('node ./commands/server.js');
-child.stdout.on('data', function(data) {
-    console.log('stdout: ' + data);
-    //Here is where the output goes
-});
-child.stderr.on('data', function(data) {
-    console.log('stderr: ' + data);
-    //Here is where the error output goes
-});
-child.on('close', function(code) {
-    console.log('closing code: ' + code);
-    //Here you can get the exit code of the script
-});
- * 
- * 
- * 
-*/
 
 
 
