@@ -44,6 +44,7 @@ app.use(fileUpload());
 
 app.use('/public',express.static('public'));
 app.use('/node_modules',express.static('node_modules'));
+app.use('/uploads/project/testing',express.static('report'));
 
 app.get("/", function (req, res) {
 

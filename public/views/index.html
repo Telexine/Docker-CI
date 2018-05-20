@@ -1,0 +1,584 @@
+<head>
+        <script src="public/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+        <script>
+            
+                $(function(){
+                    $("#header").load("public/views/partials/header.html");
+                    $("#page-header").load("public/views/partials/page-header.html");
+                    $("#container").load("public/views/partials/container.html");
+                    $("#quick-sidebar").load("public/views/partials/quick-sidebar.html");
+                    
+                });
+     </script>
+    <span id="header"></span>
+    <style type="text/css">
+        /* Chart.js */
+
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+</head>
+ 
+
+<span id="page-header"></span>
+<span id="container"></span>
+<span id="quick-sidebar"></span>
+
+
+<script src="public/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="public/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="public/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="public/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="public/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<!-- END CORE PLUGINS-->
+<!-- BEGIN THEME GLOBAL SCRIPTS-->
+<script src="public/assets/global/scripts/app.min.js" type="text/javascript"></script>
+<!-- END THEME GLOBAL SCRIPTS-->
+<!-- BEGIN THEME LAYOUT SCRIPTS-->
+<script src="public/assets/layouts/layout6/scripts/layout.min.js" type="text/javascript"></script>
+<script src="public/assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
+<script src="public/assets/layouts/global/scripts/quick-nav.min.js" type="text/javascript"></script>
+<!-- END THEME LAYOUT SCRIPTS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+<script src="node_modules/chart.js/dist/Chart.min.js" type="text/javascript"></script>
+<script src="public/js/script.js" type="text/javascript"></script>
+<script>
+    window.onload = function() {
+
+        // Fill charts
+        let d = "5af940967d24cd0985a5a407";
+        window.myLine = {};
+        let ctx = {};
+        let logtype = ["mem", "ns", "os", "cs", "los", "as"];
+        let logdesc = ["Memory Allocator", "New space", "Old space", "Code space", "Large object space", "All spaces"]
+        for (tp in logtype) {
+            ctx[tp] = document.getElementById(logtype[tp] + 'Chart').getContext('2d');
+            window.myLine[tp] = new Chart(ctx[tp], cfg[tp]);
+            window.myLine[tp].options.title.text = logdesc[tp];
+            fetchlog2(d, window.myLine[tp], logtype[tp]);
+        }
+    };
+    var color = Chart.helpers.color;
+    var cfg = {};
+    for (let i = 0; i < 6; i++) {
+        cfg[i] = {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Avaliable',
+                    backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.red,
+                    fill: false
+                }, {
+                    label: 'Used',
+                    backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.grey,
+                    fill: false
+                }, {
+                    label: 'Commited',
+                    backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                    borderColor: window.chartColors.green,
+                    fill: false
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Memory Allocator'
+                },
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date'
+                        },
+                        ticks: {
+                            major: {
+                                fontStyle: 'bold',
+                                fontColor: '#FF0000'
+                            }
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            // Include Unit
+                            callback: function(value, index, values) {
+                                return niceBytes(value);
+                            }
+                        },
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Size"
+                        }
+                    }]
+                }
+            }
+        };
+    }
+    var config2 = {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: 'Avaliable',
+                backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.red,
+                fill: false
+            }, {
+                label: 'Used',
+                backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.grey,
+                fill: false
+            }, {
+                label: 'Commited',
+                backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                borderColor: window.chartColors.green,
+                fill: false
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Memory Allocator'
+            },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    },
+                    ticks: {
+                        major: {
+                            fontStyle: 'bold',
+                            fontColor: '#FF0000'
+                        }
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        // Include Unit
+                        callback: function(value, index, values) {
+                            return niceBytes(value);
+                        }
+                    },
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Size"
+                    }
+                }]
+            }
+        }
+    };
+    const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    function niceBytes(x) {
+        let l = 0,
+            n = parseInt(x, 10) || 0;
+        while (n >= 1024 && ++l)
+            n = n / 1024;
+        return (n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + units[l]);
+    }
+    let fetchlog2 = function(Build, graph /* window.myLine*/ , type) {
+        let BuildID = Build;
+        let graphObj = graph;
+        //mem
+        Rx.DOM.ajax({
+                url: `/api/v1/reports/${BuildID}/${type}`,
+                responseType: 'json'
+            })
+            .subscribe(
+                function(data) {
+                    console.log('Backend connected');
+                    data.response.forEach(function(log) {
+                        graphObj.data.datasets[0].data.push({
+                            x: log.TimeStamp,
+                            y: log.available,
+                        });
+                        graphObj.data.datasets[1].data.push({
+                            x: log.TimeStamp,
+                            y: log.used,
+                        });
+                        graphObj.data.datasets[2].data.push({
+                            x: log.TimeStamp,
+                            y: log.committed,
+                        });
+                    });
+                    graphObj.update();
+                },
+                function(error) {
+                    // Log the error
+                    console.log(error);
+                }
+            );
+    }
+    let fetchlog = function() {
+        let BuildID = "5af94099f30fd6099d5c8f22";
+        //mem
+        Rx.DOM.ajax({
+                url: `/api/reports/${BuildID}/mem`,
+                responseType: 'json'
+            })
+            .subscribe(
+                function(data) {
+                    console.log('Backend connected');
+                    data.response.forEach(function(log) {
+                        window.myLine.data.datasets[0].data.push({
+                            x: log.TimeStamp,
+                            y: log.available,
+                        });
+                        window.myLine.data.datasets[1].data.push({
+                            x: log.TimeStamp,
+                            y: log.used,
+                        });
+                        window.myLine.data.datasets[2].data.push({
+                            x: log.TimeStamp,
+                            y: log.committed,
+                        });
+                        //	console.log(log);
+                    });
+                    window.myLine.update();
+                },
+                function(error) {
+                    // Log the error
+                    console.log(error);
+                }
+            );
+        //ns
+        Rx.DOM.ajax({
+                url: `/api/reports/${BuildID}/ns`,
+                responseType: 'json'
+            })
+            .subscribe(
+                function(data2) {
+                    console.log('report new space  connected');
+                    data2.response.forEach(function(logns) {
+                        window.myLine2.data.datasets[0].data.push({
+                            x: logns.TimeStamp,
+                            y: logns.available,
+                        });
+                        window.myLine2.data.datasets[1].data.push({
+                            x: logns.TimeStamp,
+                            y: logns.used,
+                        });
+                        window.myLine2.data.datasets[2].data.push({
+                            x: logns.TimeStamp,
+                            y: logns.committed,
+                        });
+                        //	console.log(log);
+                    });
+                    window.myLine2.update();
+                },
+                function(error) {
+                    // Log the error
+                    console.log(error);
+                }
+            );
+        //os
+        Rx.DOM.ajax({
+                url: `/api/reports/${BuildID}/os`,
+                responseType: 'json'
+            })
+            .subscribe(
+                function(data3) {
+                    console.log('Backend connected');
+                    data3.response.forEach(function(logos) {
+                        window.myLine3.data.datasets[0].data.push({
+                            x: logos.TimeStamp,
+                            y: logos.available,
+                        });
+                        window.myLine3.data.datasets[1].data.push({
+                            x: logos.TimeStamp,
+                            y: logos.used,
+                        });
+                        window.myLine3.data.datasets[2].data.push({
+                            x: logos.TimeStamp,
+                            y: logos.committed,
+                        });
+                        //	console.log(log);
+                        //
+                    });
+                    window.myLine3.update();
+                },
+                function(error) {
+                    // Log the error
+                    console.log(error);
+                }
+            );
+        //cs
+        Rx.DOM.ajax({
+                url: `/api/reports/${BuildID}/cs`,
+                responseType: 'json'
+            })
+            .subscribe(
+                function(data4) {
+                    console.log('Backend connected');
+                    data4.response.forEach(function(logcs) {
+                        window.myLine4.data.datasets[0].data.push({
+                            x: logcs.TimeStamp,
+                            y: logcs.available,
+                        });
+                        window.myLine4.data.datasets[1].data.push({
+                            x: logcs.TimeStamp,
+                            y: logcs.used,
+                        });
+                        window.myLine4.data.datasets[2].data.push({
+                            x: logcs.TimeStamp,
+                            y: logcs.committed,
+                        });
+                        //	console.log(log);
+                    });
+                    window.myLine4.update();
+                },
+                function(error) {
+                    // Log the error
+                    console.log(error);
+                }
+            );
+        //los
+        Rx.DOM.ajax({
+                url: `/api/reports/${BuildID}/los`,
+                responseType: 'json'
+            })
+            .subscribe(
+                function(data5) {
+                    console.log('Backend connected');
+                    data5.response.forEach(function(loglos) {
+                        window.myLine5.data.datasets[0].data.push({
+                            x: loglos.TimeStamp,
+                            y: loglos.available,
+                        });
+                        window.myLine5.data.datasets[1].data.push({
+                            x: loglos.TimeStamp,
+                            y: loglos.used,
+                        });
+                        window.myLine5.data.datasets[2].data.push({
+                            x: loglos.TimeStamp,
+                            y: loglos.committed,
+                        });
+                        //	console.log(log);
+                        //
+                    });
+                    window.myLine5.update();
+                },
+                function(error) {
+                    // Log the error
+                    console.log(error);
+                }
+            );
+        //as
+        Rx.DOM.ajax({
+                url: `/api/reports/${BuildID}/as`,
+                responseType: 'json'
+            })
+            .subscribe(
+                function(data) {
+                    console.log('Backend connected');
+                    data.response.forEach(function(logas) {
+                        window.myLine6.data.datasets[0].data.push({
+                            x: logas.TimeStamp,
+                            y: logas.available,
+                        });
+                        window.myLine6.data.datasets[1].data.push({
+                            x: logas.TimeStamp,
+                            y: logas.used,
+                        });
+                        window.myLine6.data.datasets[2].data.push({
+                            x: logas.TimeStamp,
+                            y: logas.committed,
+                        });
+                        //	console.log(log);
+                        //
+                    });
+                    window.myLine6.update();
+                },
+                function(error) {
+                    // Log the error
+                    console.log(error);
+                }
+            );
+    }
+    //temp
+    function newDate(days) {
+        return moment().add(days, 'd').toDate();
+    }
+
+    function newDateString(days) {
+        return moment().add(days, 'd').format();
+    }
+</script>
+<div class="portlet light tasks-widget bordered" id="codeBuild-controller">
+    <div class="btn purple" id="btnTobottom" style="margin: 4px;"><i class="fa fa-angle-double-down"> </i></div>
+    <div class="btn red" id="btnRedStop" style="margin: 4px;">Stop<i class="fa fa-stop"></i></div>00:22 seconds</div>
+<link rel="stylesheet" type="text/css" href="public/js/loading-bar.css" />
+<link href="public/assets/global/plugins/bootstrap-toastr/toastr.css" rel="stylesheet" />
+<script src="public/assets/global/plugins/bootstrap-toastr/toastr.js"></script>
+<script src="public/assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
+<script src="public/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+<script src="public/assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+<script src="public/assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js" type="text/javascript"></script>
+<script src="public/assets/pages/scripts/form-wizard.min.js" type="text/javascript"></script>
+<script src="public/js/dropzone.js" type="text/javascript"></script>
+<script src="public/assets/global/plugins/codemirror/lib/codemirror.js" type="text/javascript"></script>
+<script src="public/assets/global/plugins/codemirror/mode/javascript/javascript.js" type="text/javascript"></script>
+<script src="public/assets/global/plugins/codemirror/mode/htmlmixed/htmlmixed.js" type="text/javascript"></script>
+<script src="public/assets/global/plugins/codemirror/mode/css/css.js" type="text/javascript"></script>
+<script type="text/javascript" src="public/js/loading-bar.js"></script>
+<!-- RXJS-->
+<script src="node_modules/rx/dist/rx.lite.js" type="text/javascript"></script>
+<script src="node_modules/rx-dom/dist/rx.dom.js" type="text/javascript"></script>
+<script>
+    let _file;
+    let source;
+    Dropzone.options.myAwesomeDropzone = {
+        dictDefaultMessage: "or click here ",
+        autoQueue: true,
+        autoDiscover: false,
+        acceptedFiles: ".zip",
+        init: function() {
+            myDropzone = this; // closure
+            this.on("addedfile", function(file) {
+                if (this.files[1] != null) {
+                    this.removeFile(this.files[0]);
+                }
+            });
+            this.on("sending", function(file, xhr, formData) {
+                formData.append("id", "uid1");
+                formData.append("proj", $('#projname').val() + "");
+                let service = '1,0,0'; //$('#checkboxNodeJS').val();
+                formData.append("service", service);
+                console.log(formData);
+            });
+            this.on("success", function(file, res) {
+                source = new EventSource("/api/v1/build/" + res.toString());
+                $('#isupload').val(res);
+                $('#btncontinue').click();
+                $('#btncontinue').attr("style", "visibility:hidden");
+                $('#btnback').attr("style", 'visibility:hidden');
+                source.addEventListener('console', function(result) {
+                    buildConsoleLog(result.data, 'console');
+                });
+                source.addEventListener('err', function(result) {
+                    buildConsoleLog(`<br><br>################################################<br>
+" ${result.data}<br>################################################`, 'error');
+                });
+                source.addEventListener('end', function(result) {
+                    buildConsoleLog(`<br><br>################################################<br>
+" ${result.data}<br>################################################`, 'end');
+                });
+            });
+            this.on("uploadprogress", function(file, progress, bytesSent) {});
+        },
+        uploadMultiple: false,
+        paramName: "file", // The name that will be used to transfer the file
+        maxFilesize: 50, // MB
+    };
+    var loadTimer, build;
+    $(function() {
+        $('#btnRedStop').bind("click", function() {
+            let btn = $(this);
+            source.close();
+            toastr.warning('By User', "Canceled Build");
+            clearInterval(loadTimer);
+            $('#btnRedStop').addClass("disabled");
+            btn.css("pointer-events", "none");
+            setTimeout(function() {
+                // loade report page
+                $('#btncontinue').click();
+            }, 1000);
+        });
+        var i = 0;
+        build = $('#builder');
+        loadTimer = setInterval(function() {
+            (i == 4) ? i = 0: i++;
+            if (build.text().length > 13) {
+                build.text("Building");
+            }
+            build.text(build.text() + ".");
+            var lasted = $('#builder');
+        }, 1000);
+    });
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "positionClass": "toast-bottom-right",
+        "onclick": null,
+        "showDuration": "1000",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+    let buildConsoleLog = function(data, state) {
+        //show controller
+        $('#codeBuild-controller').css("visibility", "visible");
+        let c1 = document.createElement("div");
+        c1.className = "prompt";
+        let d = new Date();
+        c1.innerHTML = `worker@${addZero(d.getHours())}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())} $  `;
+        let cmd = document.createElement("span");
+        switch (state) {
+            case 'console':
+                cmd.setAttribute("style", "color:#32c146;");
+                break;
+            case 'error':
+                cmd.setAttribute("style", "color:#d73a49;padding-top:20px");
+                break;
+            case 'end':
+                c1.innerHTML = "";
+                cmd.setAttribute("style", "color:#FFFFF;padding-top:20px");
+                clearInterval(loadTimer);
+                build.text("Build Finished");
+                $('.bufferload').attr("style", "display:none;");
+                $('#btncontinue').attr("style", "visibility:visible");
+                break;
+        }
+        cmd.innerHTML = (data).toString().replace(/"/g, "");
+        c1.appendChild(cmd);
+        $('.codein_body').append(c1);
+    }
+
+    function loadReport() {}
+    // etc function
+    function addZero(i) {
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
+    }
+</script><input class="dz-hidden-input" type="file" multiple="multiple" accept=".zip" style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;" />
+<script src="undefined"></script>
+<!-- BEGIN CONTAINER-->

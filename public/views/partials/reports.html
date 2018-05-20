@@ -1,0 +1,168 @@
+  <!-- **** BEGIN PAGE BASE CONTENT****-->
+  <div class="note c">
+        <div class="portlet light bordered" id="form_wizard_1">
+            <div class="portlet-title">
+                <div class="caption"><i class="icon-layers font-red"></i><span class="caption-subject font-red bold uppercase">Ci Wizard -<span class="step-title"> Step 1 of 4 </span></span>
+                </div>
+                <div class="actions"><a class="btn btn-circle btn-icon-only btn-default" href="javascript:;"><i class="icon-cloud-upload"></i></a><a class="btn btn-circle btn-icon-only btn-default" href="javascript:;"><i class="icon-wrench"></i></a><a class="btn btn-circle btn-icon-only btn-default"
+                        href="javascript:;"><i class="icon-trash"></i></a></div>
+            </div>
+            <div class="portlet-body form">
+                <form class="form-horizontal" id="submit_form" action="#" method="POST" novalidate="novalidate">
+                    <div class="form-wizard">
+                        <div class="form-body">
+                            <ul class="nav nav-pills nav-justified steps">
+                                <li class="active"><a class="step" href="#tab1" data-toggle="tab" aria-expanded="true"><span class="number"> 1 </span><span class="desc"><i class="fa fa-check"></i>Project  Setup</span></a></li>
+                                <li><a class="step" href="#tab2" data-toggle="tab"><span class="number"> 2 </span><span class="desc"><i class="fa fa-check"></i> Upload</span></a></li>
+                                <li><a class="step active" href="#tab3" data-toggle="tab"><span class="number"> 3 </span><span class="desc"><i class="fa fa-check"></i> Build</span></a></li>
+                                <li><a class="step" href="#tab4" data-toggle="tab"><span class="number"> 4 </span><span class="desc"><i class="fa fa-check"></i> result</span></a></li>
+                            </ul>
+                            <div class="progress progress-striped" id="bar" role="progressbar">
+                                <div class="progress-bar progress-bar-success" style="width: 25%;"> </div>
+                            </div>
+                            <div class="tab-content">
+                                <div class="alert alert-danger display-none"><button class="close" data-dismiss="alert"></button> You have some form errors. Please check below.</div>
+                                <div class="alert alert-success display-none"><button class="close" data-dismiss="alert"></button> Your form validation is successful!</div>
+                                <div class="tab-pane" id="tab4">
+                                    <h3 class="block">Provide your Project details</h3>
+                                    <div class="form-group"><label class="control-label col-md-3">Project Name<span class="required" aria-required="true"> * </span></label>
+                                        <div class="col-md-4"><input class="form-control" id="projname" type="text" name="Project" minlength="3" required="" aria-required="true" /><span class="help-block"></span></div>
+                                    </div>
+                                    <div class="form-group form-md-checkboxes"><label class="control-label col-md-3"> Service Select</label>
+                                        <div class="md-checkbox-inline">
+                                            <div class="md-checkbox has-success"><input class="md-check" id="checkboxNodeJS" type="checkbox" checked="" /><label for="checkboxNodeJS"><span class="check"></span><span class="box"></span> Node JS</label></div>
+                                            <div class="md-checkbox has-error"><input class="md-check" id="checkboxMongod" type="checkbox" /><label for="checkboxMongod"><span></span><span class="check"></span><span class="box"></span> Mongodb</label></div>
+                                            <div class="md-checkbox has-info"><input class="md-check" id="checkboxMysql" type="checkbox" /><label for="checkboxMysql"><span></span><span class="check"></span><span class="box"></span> My sql</label></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab2">
+                                    <h3 class="block">Provide your profile details</h3>
+                                    <div class="form-group" style="display:none;"><label class="control-label col-md-3">Service Options<span class="required" aria-required="true"> * </span></label>
+                                        <div class="col-md-4">
+                                            <div class="checkbox-list"><label><input type="checkbox" name="payment[]" value="1" data-title="Auto-Pay with this Credit Card."/> Auto-Pay with this Credit Card</label><label><input type="checkbox" name="payment[]" value="2" data-title="Email me monthly billing."/> Email me monthly billing</label></div>
+                                            <div
+                                                id="form_payment_error"> </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12" style="padding:20px;">
+                                        <form class="dropzone dropzone-file-area dz-clickable" id="myAwesomeDropzone" action="/api/upload" method="post" enctype="multipart/form-data" required="" aria-required="true">
+                                            <h3>Drop your Project here</h3>
+                                            <h5>File much less than 50 MB</h5>
+                                            <div class="dz-default dz-message"><span>or click here </span></div>
+                                        </form><input class="form-control" id="isupload" type="text" name="Project" minlength="3" style="visibility:hidden;" required="" aria-required="true" /></div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab3">
+                                <h2 class="block">Building Status
+                                    <div class="col-md-12"></div>
+                                </h2>
+                                <h2 class="form-section">
+                                    <div class="code_window"></div>
+                                </h2>
+                                <div class="code_bar">
+                                    <div class="code_btn"></div>
+                                </div>
+                                <div class="code_body">
+                                    <div class="codein_body">
+                                        <div class="pre">
+                                            <div class="comment" id="builder">Building..</div>
+                                            <div class="prompt"><span class="comment">================================================<br/></span></div>
+                                        </div>
+                                    </div>
+                                    <div class="bufferload">worker $<span class="pulse"> _</span></div>
+                                </div>
+                            </div>
+                            <div class="tab-pane active" id="tab1">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="portlet light portlet-fit bordered">
+                                            <div class="portlet-title">
+                                                <div class="caption"><i class="icon-cursor font-dark hide"></i><span class="caption-subject font-dark bold uppercase">GC General Stats </span></div>
+                                                <div class="actions"><a class="btn btn-sm btn-circle red easy-pie-chart-reload" href="javascript:;"><i class="fa fa-repeat"></i> Reload</a></div>
+                                            </div>
+                                            <div class="portlet-body">
+                                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0;"></div>
+                                                    </div>
+                                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0;"></div>
+                                                    </div>
+                                                </div><canvas class="chartjs-render-monitor" id="memChart" width="971" height="300" style="display: block; width: 971px; height: 300px;"></canvas></div>
+                                            <div class="portlet-body">
+                                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0;"></div>
+                                                    </div>
+                                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0;"></div>
+                                                    </div>
+                                                </div><canvas class="chartjs-render-monitor" id="nsChart" width="971" height="300" style="display: block; width: 971px; height: 300px;"></canvas></div>
+                                            <div class="portlet-body">
+                                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0;"></div>
+                                                    </div>
+                                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0;"></div>
+                                                    </div>
+                                                </div><canvas class="chartjs-render-monitor" id="osChart" width="971" height="300" style="display: block; width: 971px; height: 300px;"></canvas></div>
+                                            <div class="portlet-body">
+                                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0;"></div>
+                                                    </div>
+                                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0;"></div>
+                                                    </div>
+                                                </div><canvas class="chartjs-render-monitor" id="csChart" width="971" height="300" style="display: block; width: 971px; height: 300px;"></canvas></div>
+                                            <div class="portlet-body">
+                                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0;"></div>
+                                                    </div>
+                                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0;"></div>
+                                                    </div>
+                                                </div><canvas class="chartjs-render-monitor" id="losChart" width="971" height="300" style="display: block; width: 971px; height: 300px;"></canvas></div>
+                                            <div class="portlet-body">
+                                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0;"></div>
+                                                    </div>
+                                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0;"></div>
+                                                    </div>
+                                                </div><canvas class="chartjs-render-monitor" id="asChart" width="971" height="300" style="display: block; width: 971px; height: 300px;"></canvas></div>
+                                            <div id="hc_mem" style="min-width: 310px; height: 400px; margin: 0 auto;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-9"><a class="btn default button-previous disabled" id="btnback" href="javascript:;" style="display: none;"><i class="fa fa-angle-left"></i> Back</a><a class="btn btn-outline green button-next" id="btncontinue" href="javascript:;">Continue<i class="fa fa-angle-right"></i></a>
+                                <a
+                                    class="btn green button-submit" href="javascript:;" style="display: none;">Submit<i class="fa fa-check"></i></a>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    <p>A black page template with a minimal dependency assets to use as a base for any custom page you create</p>
+</div>
+<!-- END PAGE BASE CONTENT-->
+</div>
+<!-- BEGIN FOOTER-->
+<p class="copyright-v2">2016 &copy; Metronic Theme By<a target="_blank" href="http://keenthemes.com">Keenthemes</a><a href=" " title=" data" target="_blank">data!</a></p>
+<!-- BEGIN QUICK SIDEBAR TOGGLER--><button class="quick-sidebar-toggler" type="button" data-toggle="collapse"><span class="sr-only">Toggle Quick Sidebar</span><i class="icon-logout"></i><div class="quick-sidebar-notification"><span class="badge badge-danger">7</span></div></button>
+<!-- END QUICK SIDEBAR TOGGLER--><a class="go2top" href="#index" style="display: none;"><i class="icon-arrow-up"></i></a>
+<!-- END FOOTER-->
+</div>
+</div>

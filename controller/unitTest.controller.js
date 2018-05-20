@@ -5,6 +5,18 @@ const util = require('util');
 var GcLogParser = require('gc-log-parser');
 const exec = util.promisify(require('child_process').exec);
 const fileUpload = require('../node_modules/express-fileupload');
+const getPort = require('../node_modules/get-port');
+var http = require('http');
+
+const fs = require('fs');
+var subprocess = require('../node_modules/subprocess');
+
+var subprocess = require('subprocess');
+var request = require('request');
+ 
+
+
+
 
 module.exports ={
 
@@ -20,30 +32,57 @@ module.exports ={
               refTestID=data;
 
 
-
               var parser = new GcLogParser();
               let cur_pid;
               var ev = SSE(res);
               let curFilepath = "uploads/project/testing/"+buildID+"/index.js";
-              exec('npm install');
-              
-              spawn = require('child_process').spawn;
-              np = spawn('node', ["--trace_gc", '--trace_gc_verbose', '--trace_gc_nvp',"--max_old_space_size=100",curFilepath],{detached: true});
-              cur_np =np ;
-              
+              try{
+                 exec('npm install');
+              }catch(e){}
 
-
+              
+              cur_np = require('child_process').spawn;
+              auditor = require('child_process').spawn;
 
               // Audit Mode 
-              if(service){
-                auditor  = require('child_process').spawn;
-                auditProcess  = auditor('node', ["--trace_gc", '--trace_gc_verbose', '--trace_gc_nvp',"--max_old_space_size=100",curFilepath],{detached: true});
+              if(service=="true"){
+                 
 
+                getPort().then(port => {
+                  console.log(port);
+                  //=> 51402
+                  var processes = {
+                    app: {
+                      command: 'node',
+                      commandArgs: [curFilepath, '%port%'],
+                      port: port
+                    }
+                  };
+                   
+                  subprocess(processes, function(error, processes){
+                    if (error) {
+                      console.error(error.stack);
+                      process.exit(1);
+                    }
+                    console.log('processes started successfully!');
+                    console.log('running Audit Mode');
+                    let ad= auditor("lighthouse",["http://localhost:"+port,"--output","html","--output-path",curFilepath.replace("/index.js","/report.html")]);
+                    ad.on('exit', function (code) {
+                      console.log('finished  Audit');
+            
+                    });
+                  });
 
-
+                });
+                  
 
               }
-
+               
+                
+                np = cur_np('node', ["--trace_gc", '--trace_gc_verbose', '--trace_gc_nvp',"--max_old_space_size=100",curFilepath],{detached: true});
+                
+             
+              
 
 
 
@@ -93,7 +132,7 @@ module.exports ={
               });
 
             
-              np.stderr.on('data', function (data) {
+              np.stderr.on('error', function (data) {
                 ev.sendEvent('err', function () {
                   return replaceAll(data.toString(),"\n","<br>")
                 });
@@ -120,12 +159,12 @@ module.exports ={
               ev.disconnect(function () {
                   console.log("disconnected");
                   // kill current process
-                  cur_np.stdin.pause();
-                  cur_np.kill();
+                  np.stdin.pause();
+                  np.kill();
                   ev.removeEvent();
               });
-          
-          }});
+            }
+          });
         },
 
       upload : function (req,res){
