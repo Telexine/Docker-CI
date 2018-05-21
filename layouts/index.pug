@@ -426,7 +426,10 @@ html
                                                             appendSidebar(audit,projectname,unitTest_id,buildPath,user_id,ts);
                                                 }
                                           );
-                              
+                                          //sort form new to old 
+                                          $('li').each(function() {
+                                                      $(this).parent().prepend(this);
+                                          });
                                     },
                                     function (error) {
                                     // Log the error
@@ -548,8 +551,9 @@ html
                               userRef.set("Online");
 
                               _Username = user.displayName;
-                              $('.list-heading').text("Username: "+_Username);
+                              $('list-heading').text("Username: "+_Username);
                               fetchUserReports(_Username);
+
                               con = $('#NAME')
                                con.text(_Username);
                               unblur();

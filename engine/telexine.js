@@ -97,7 +97,6 @@ exports.getReport = function(type,testID){
 7. los -  Large object space
 */  
 
-  let data = [] ;
   return new Promise(resolve=>{
   observables.finder
     .find(Stat, {UnitID:testID,name:type})
@@ -115,8 +114,6 @@ exports.getReport = function(type,testID){
 
 exports.getReportsByUser = function(User_id){
   
-    //console.log(testID);
-    let data = [] ;
     return new Promise(resolve=>{
     observables.finder
       .find(Unit_test, {user_id:User_id})
