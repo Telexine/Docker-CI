@@ -7,8 +7,6 @@
           span.caption-subject.font-dark.bold.uppercase GC General Stats 
         .actions
           a.btn.btn-sm.btn-circle.red.easy-pie-chart-reload(href='javascript:;')
-            i.fa.fa-repeat
-            |  Reload
       .portlet-body
         canvas#memChart(width='400', height='300')
       .portlet-body
@@ -21,6 +19,12 @@
         canvas#losChart(width='400', height='300')
       .portlet-body
         canvas#asChart(width='400', height='300')
+    .portlet-title#Audit_port(style="display:hidden;")
+      .caption
+        i.icon-cursor.font-dark.hide
+        span.caption-subject.font-dark.bold.uppercase  AUDIT
+          iframe#Audit
+      
       
 
 
