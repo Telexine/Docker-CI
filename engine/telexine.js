@@ -11,7 +11,9 @@ var observables = require('mongoose-observables');
 var CISchema = mongoose.Schema({
     user_id: String,
     path: String,
-    audit: Boolean
+    audit: Boolean,
+    proj_name: String,
+    TimeStamp: {type: Date,default: Date.now}
 
   });
  
@@ -95,9 +97,6 @@ exports.getReport = function(type,testID){
 7. los -  Large object space
 */  
 
-
-
-  //console.log(testID);
   let data = [] ;
   return new Promise(resolve=>{
   observables.finder
@@ -110,26 +109,51 @@ exports.getReport = function(type,testID){
         throw err;
     });
   });
- 
-
-  
- 
-
- 
-
-
-
   
 }
 
 
+exports.getReportsByUser = function(User_id){
+  
+    //console.log(testID);
+    let data = [] ;
+    return new Promise(resolve=>{
+    observables.finder
+      .find(Unit_test, {user_id:User_id})
+      .subscribe(Stat => {
+        resolve(Stat);
+      }
+      , err =>{
+          throw err;
+      });
+    });
+   
+  
+    
+   
+  
+   
+  
+  
+  
+    
+  }
+
+
+
+
+
+
+
+
 //create function 
-exports.createTest = function(User_id,Path,Audit){
+exports.createTest = function(User_id,Path,Proj_name,Audit){
   return new Promise(resolve=>{
 observables.creator
     .create(Unit_test, {
       user_id: User_id,
       path: Path,
+      proj_name:Proj_name,
       audit: Audit
     })
     .subscribe(Unit_test =>{ 

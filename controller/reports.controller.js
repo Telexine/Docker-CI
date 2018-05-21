@@ -44,7 +44,25 @@ module.exports ={
             
 
 
+    },
+    getPastReport : function(req,res){
+        let user_id = req.params.user_id;
+        
+        engine.getReportsByUser(user_id).then((data)=>{
+            //get log promise 
+                if(data) { 
+                    //de-consruct log 
+                    var obj = JSON.stringify(data);
+                    if (data==""){
+                        //null
+                        res.status(200).send("null"); 
+                    }
+                    res.status(200).send(obj); 
+                    
+                }else res.status(404).send("ERROR");
+
+    });
+
+
     }
-
-
 }

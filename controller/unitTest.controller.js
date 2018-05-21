@@ -20,13 +20,14 @@ var subprocess = require('subprocess');
 module.exports ={
 
     build : function(req,res){
-
+          
             var buildID = req.params.buildID;
             let refTestID;
             let username = req.params.username;
             let service = req.params.service;
-            console.log(service);
-            engine.createTest(username,"uploads/project/testing/"+buildID+"/",service).then((data)=>{
+            let Proj_name = req.params.proj;
+            console.log(Proj_name);
+            engine.createTest(username,"uploads/project/testing/"+buildID+"/",Proj_name,service).then((data)=>{
             if(data){ 
               refTestID=data;
 
@@ -215,18 +216,22 @@ module.exports ={
             thisPath = "uploads/project/"+filename;
             thisTestPath = "uploads/project/testing/"+filename.replace(".zip","");
             if(stdout.replace(/(\r\n\t|\n|\r\t)/gm,"").includes(filename)){
-                cmd = 'unzip -j '+ thisPath+" -d "+ thisTestPath ;
+                cmd = 'unzip '+ thisPath+" -d "+ thisTestPath ;
 
                 exec(cmd ,
                 (error, stdout, stderr) => {
                         if(error){
                             console.error(`exec error: ${error}`);
                             return;
-                        }
-                        if(service=='1,1,0'){
-                          
-                        }
-
+                        } 
+                        cmd = "rm -f "+thisPath;
+                        exec(cmd ,
+                          (error, stdout, stderr) => {
+                                  if(error){
+                                      console.error(`exec error: ${error}`);
+                                      return;
+                           } 
+                          });
 
 
                         return res.status(200).send(filename.replace(".zip",""));     

@@ -173,3 +173,8 @@
   top: 0;
   left: 0;
 }
+.sidebarbadges{
+  float: left;
+  margin: 2px;
+}
+ 
