@@ -41,9 +41,10 @@ module.exports ={
               }catch(e){}
 
               
-              cur_np = require('child_process').spawn;
-              auditor = require('child_process').spawn;
-
+              cur_np = require('child_process').spawn;   //spawn gc process
+              auditor = require('child_process').spawn;  //spawn Audit 
+              
+              b_Audited = false;  // is audit complete 
               // Audit Mode 
               if(service=="true"){
                  
@@ -69,7 +70,7 @@ module.exports ={
                     let ad= auditor("lighthouse",["http://localhost:"+port,"--output","html","--output-path",curFilepath.replace("/index.js","/report.html")]);
                     ad.on('exit', function (code) {
                       console.log('finished  Audit');
-            
+                      b_Audited = true;
                     });
                   });
 
@@ -77,15 +78,7 @@ module.exports ={
                   
 
               }
-               
-                
-                np = cur_np('node', ["--trace_gc", '--trace_gc_verbose', '--trace_gc_nvp',"--max_old_space_size=100",curFilepath],{detached: true});
-                
-             
-              
-
-
-
+              np = cur_np('node', ["--trace_gc", '--trace_gc_verbose', '--trace_gc_nvp',"--max_old_space_size=100",curFilepath],{detached: true});
               //send Build ID to client 
               ev.sendEvent('unitID', function () {
                 return refTestID;
@@ -142,10 +135,27 @@ module.exports ={
             
             
               np.on('exit', function (code) {
-            
+                if(service=="true"){ // audit mode on 
+                    if(!b_Audited){ //is audited 
+                        var recheck = setInterval(function(){ 
+                            if(b_Audited){
+                              clearInterval(recheck);
+                              ev.sendEvent('end', function () {
+                                return 'child process exited with code ' + code.toString()+ ' And Audit completed ';
+                               });
+                            }
+                        }, 1000);
+                      
+                    }else{
+                      //audit complete soon as gc 
+                      ev.sendEvent('end', function () {
+                       return 'child process exited And Audit completed ';
+                      });
+                    }
+                }else{
                 // SSE Event sender to close process 
                 ev.sendEvent('end', function () {
-                
+                  
                   ev.removeEvent();
                   try{
                   return 'child process exited with code ' + code.toString();
@@ -155,12 +165,21 @@ module.exports ={
             
                     } 
                   });
-              });
+              
+                }  });
+
+              // on web client Close (user close the web,conn lost )
               ev.disconnect(function () {
                   console.log("disconnected");
                   // kill current process
                   np.stdin.pause();
                   np.kill();
+                  if(service=="true"){ // audit mode on 
+                    try{
+                    ad.stdin.pause();
+                    ad.kill();
+                    }catch(e){}
+                  }
                   ev.removeEvent();
               });
             }

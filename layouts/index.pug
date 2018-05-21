@@ -63,11 +63,14 @@ html
 
                               
                                this.on("success", function(file,res) {
+                                    // create SSE connection to the backend 
                                     source = new EventSource("/api/v1/build/"+`${res.toString()}/${_Username}/${_audit? "true":"false"}`);
                                     buildFolder =res.toString();
                                     // check service 
                                     let service = `1,${_audit? "1":"0"},0` ; 
-
+                                    //show controller 
+                                    $('#codeBuild-controller').css("visibility", "visible");
+                                    
                                     $('#isupload').val(res);
                                     $('#btncontinue').click();
                                     $('#btncontinue').attr("style","visibility:hidden");
@@ -93,7 +96,7 @@ html
                                           clearInterval(t);
                                           buildConsoleLog(`<br><br>################################################<br>
                                                             " ${result.data}<br>################################################`,'end');
-
+                                          
                                     });
                                });
                                this.on("uploadprogress",function(file, progress, bytesSent) {
@@ -164,8 +167,8 @@ html
 
                   
                   let buildConsoleLog = function(data,state){
-                        //show controller 
-                        $('#codeBuild-controller').css("visibility", "visible");
+
+                        
                         let  c1 = document.createElement("div");
                         c1.className = "prompt";
                         let d= new Date();
