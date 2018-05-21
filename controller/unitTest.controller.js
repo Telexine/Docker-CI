@@ -9,7 +9,6 @@ const getPort = require('../node_modules/get-port');
 var http = require('http');
 
 const fs = require('fs');
-var subprocess = require('../node_modules/subprocess');
 
 var subprocess = require('subprocess');
 
@@ -48,7 +47,7 @@ module.exports ={
               // Audit Mode 
               if(service=="true"){
                  
-
+                try{
                 getPort().then(port => {
                   console.log(port);
                   //=> 51402
@@ -75,7 +74,9 @@ module.exports ={
                   });
 
                 });
-                  
+              }catch(e){
+                
+              }
 
               }
               np = cur_np('node', ["--trace_gc", '--trace_gc_verbose', '--trace_gc_nvp',"--max_old_space_size=100",curFilepath],{detached: true});
@@ -141,15 +142,15 @@ module.exports ={
                             if(b_Audited){
                               clearInterval(recheck);
                               ev.sendEvent('end', function () {
-                                return 'child process exited with code ' + code.toString()+ ' And Audit completed ';
+                                return 'child process exited with code ' + code.toString()+ '<br>   And Audit completed ';
                                });
                             }
                         }, 1000);
                       
                     }else{
-                      //audit complete soon as gc 
+                      //audit complete soon as gc // 1th percentile 
                       ev.sendEvent('end', function () {
-                       return 'child process exited And Audit completed ';
+                       return 'child process exited And :   Audit completed ';
                       });
                     }
                 }else{

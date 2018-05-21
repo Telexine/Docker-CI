@@ -5,7 +5,7 @@ html
       include home.pug
 
       #codeBuild-controller.portlet.light.tasks-widget.bordered
-            #btnTobottom.btn.purple(style="margin: 4px;")
+            #btnTobottom.btn.purple(style="margin: 4px;",onClick="gotoBottom();")
                   i.fa.fa-angle-double-down 
             #btnRedStop.btn.red(style="margin: 4px;") Stop
                   i.fa.fa-stop
@@ -71,6 +71,13 @@ html
                                     //show controller 
                                     $('#codeBuild-controller').css("visibility", "visible");
                                     
+                                    if(_audit){
+                                          //auditmode, chage bar style
+                                          $('.code_bar').css("background","red");
+                                          $('.code_bar').append("<div style='margin-left: 100px;'>AUDIT MODE</div>");
+                                          //$('.code_bar').text($('.code_bar').text()+ "AUDIT MODE");
+                                    }
+
                                     $('#isupload').val(res);
                                     $('#btncontinue').click();
                                     $('#btncontinue').attr("style","visibility:hidden");
@@ -86,14 +93,13 @@ html
                                     });
 
                                      source.addEventListener('err', function (result) {
-                                          clearInterval(loadTimer);
-                                          clearInterval(t);
+                                          stopBuild("err");
                                           buildConsoleLog(`<br><br>################################################<br>
                                                             " ${result.data}<br>################################################`,'error');
                                     });
                                      source.addEventListener('end', function (result) {
-                                          clearInterval(loadTimer);
-                                          clearInterval(t);
+                                          stopBuild("end");
+                                          source.close();
                                           buildConsoleLog(`<br><br>################################################<br>
                                                             " ${result.data}<br>################################################`,'end');
                                           
@@ -112,17 +118,20 @@ html
 
                   };
                    var loadTimer,build,currentBuild,buildFolder,_audit = false/*for checkbox*/;
-                  
+                   let isReportDone = false;
 
                   $(function() {
                         $('#btnRedStop').bind( "click", function() {
                               let btn = $(this);
-                              source.close();
-                              toastr.warning('By User',"Canceled Build");
+
+                             //check cancel is a users interupt Build?
+                              if(source.CLOSED!==source.readyState){
+                                toastr.warning('By User',"Canceled Build");
+                              }
                               clearInterval(loadTimer);
                               clearInterval(t);
-                              $('#btnRedStop').addClass("disabled");
-                              btn.css("pointer-events", "none");
+                              //$('#btnRedStop').addClass("disabled");
+                              //btn.css("pointer-events", "none");
 
                               // Load GC report 
                               setTimeout(function (){
@@ -204,11 +213,16 @@ html
 
                   let LoadAudit = function(){
                           
-                                    if(_audit){
+                                    if(_audit&isReportDone){
                                           //select audit mode
-                                         let audit=  $('#Audit');
-                                          audit.attr("src","/report/"+buildFolder+"/report.html");
-                                           $('#Audit_port').attr("style","display:block");
+                                          
+                                           $('#Audit').attr("src","/report/"+buildFolder+"/report.html");
+                                           $('#Audit_port').css("visibility", "visible");
+                                           
+                                    }
+                                    else{
+                                          $('#Audit_port').css("visibility", "hidden");
+                                          $('#Audit').css("display", "none");
                                     }
                             
 
@@ -226,8 +240,7 @@ html
 
                   //timer
                   let    seconds = 0, minutes = 0, hours = 0,t;
-
-                 function add() {
+                  function add() {
                               seconds++;
                               if (seconds >= 60) {
                                     seconds = 0;
@@ -246,7 +259,7 @@ html
                   }
                   timer();
 
-                  // FirebaseUI config.
+                  // FirebaseUI config. for auth login
 
                     // Initialize Firebase
                         var config = {
