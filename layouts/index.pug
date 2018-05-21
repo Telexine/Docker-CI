@@ -546,8 +546,9 @@ html
                               userRef.onDisconnect().set("Offline");
                               //on normal (connected) set to Online
                               userRef.set("Online");
-                              
+
                               _Username = user.displayName;
+                              $('.list-heading').text("Username: "+_Username);
                               fetchUserReports(_Username);
                               con = $('#NAME')
                                con.text(_Username);

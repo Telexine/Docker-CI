@@ -97,10 +97,6 @@ html
 														.col-md-4
 															input#projname.form-control(type='text', name='Project',minlength="3", required='' )
 															span.help-block
-
-
-
-
 													.form-group.form-md-checkboxes
 														label.control-label.col-md-3 
 															| Service Select
@@ -118,7 +114,12 @@ html
 																	span.check
 																	span.box
 																	|  Audit
+															.form-group
+																label.col-md-3
+																span.control-label.col-md-3.help-block(style="text-align:left")
+																	| *** Main JS file must be named index.js in the root of zip archive
 													// BEGIN Portlet PORTLET
+
 													.portlet-title
 													.caption(style="color:#e73d4a;")
 														i.fa.fa-info-circle
@@ -131,6 +132,7 @@ html
 													.code_body.portlet-body(style="margin-top:20px;")
 														| var port = process.argv[2] || '5000';<br>
 														| server.listen(port);
+
 													// END Portlet PORTLET
 												#tab2.tab-pane
 													h3.block Provide your profile details
