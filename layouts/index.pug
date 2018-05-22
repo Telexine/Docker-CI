@@ -52,13 +52,6 @@ html
                               
                                     formData.append("id", "uid1");
                                     formData.append("proj", $('#projname').val()+"");
-  
-                                    
-                                    
-                                    //formData.append("service", service);
-
-                                    console.log(formData);
-
                                });
 
                               
@@ -274,21 +267,82 @@ html
                   function timer() {
                         t = setTimeout(add, 1000);
                   }
-                  
-                  let LoadAllGraph = function(build_id){
-                                          if(!build_id) return console.log("Can't find Build ID");;
-                                          window.myLine  = {};let ctx = {};
-                                          let logtype = ["mem","ns","os","cs","los","as"];
-                                          let logdesc = ["Memory Allocator","New space","Old space","Code space","Large object space","All spaces"]
-                                          for(tp in logtype){
-                                                ctx[tp] = document.getElementById(logtype[tp]+'Chart').getContext('2d');
-                                                console.log(ctx[tp]);
-                                                window.myLine[tp] = new Chart(ctx[tp], cfg[tp]);
-                                                window.myLine[tp].options.title.text = logdesc[tp];
-                                                fetchlog(build_id,window.myLine[tp],logtype[tp]);
+               
+      
+
+                  var color = Chart.helpers.color;
+                  var cfg = {};
+
+                  for(let i = 0 ; i<6;i++){
+                        cfg[i] = {
+                              
+                              type: 'line',
+                              data: {
+                                    datasets: [{
+                                          label: 'Avaliable',
+                                          backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+                                          borderColor: window.chartColors.red,
+                                          fill: false
+                                    },{
+                                          label: 'Used',
+                                          backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                                          borderColor: window.chartColors.grey,
+                                          fill: false 
+                                    
+                                    }, {
+                                          label: 'Commited',
+                                          backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+                                          borderColor: window.chartColors.green,
+                                          fill: false
+                                    }]
+                              },
+                              options: {
+                                    maintainAspectRatio: false,
+                                    responsive: true,
+                                    title: {
+                                          display: true,
+                                          text: 'Memory Allocator'
+                                    },
+                                    scales: {
+                                          xAxes: [{
+                                                type: 'time',
+                                                display: true,
+                                                scaleLabel: {
+                                                      display: true,
+                                                },
+                                                ticks: {
+                                                      major: {
+                                                            fontStyle: 'bold',
+                                                            fontColor: '#FF0000'
+                                                      }
+                                                }
+                                          }],
+                                          yAxes: [{
+                                                ticks: {
+                                                      beginAtZero: true,
+                                                      // Include Unit 
+                                                      callback: function(value, index, values) {
+                                                            return  niceBytes(value);
+                                                      }
+                                                },	
+                                                display: true,
+                                                scaleLabel: {
+                                                      display: true,
+                                                      labelString: "Size"
+                                                      }
                                           }
-                                    };
-                                                      var color = Chart.helpers.color;
+                                    ]
+                                    }
+                              }
+                        
+                        };}
+
+ 
+                  let LoadAllGraph = function(build_id){
+                                          if(!build_id) return console.log("Can't find Build ID");
+
+
+                                            var color = Chart.helpers.color;
                                                       var cfg = {};
 
                                                       for(let i = 0 ; i<6;i++){
@@ -354,6 +408,17 @@ html
                                                                   }
                                                             
                                                             };}
+                                          let myLine  = {};let ctx = {};
+                                          let logtype = ["mem","ns","os","cs","los","as"];
+                                          let logdesc = ["Memory Allocator","New space","Old space","Code space","Large object space","All spaces"]
+                                          for(tp in logtype){
+                                                ctx[tp] = document.getElementById(logtype[tp]+'Chart').getContext('2d');
+                                                myLine[tp] = new Chart(ctx[tp], cfg[tp]);
+                                                myLine[tp].options.title.text = logdesc[tp];
+                                                fetchlog(build_id,myLine[tp],logtype[tp]);
+                                          }
+                        };
+
                                                             const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
                                                                   function niceBytes(x){
@@ -369,8 +434,6 @@ html
                         let BuildID=Build;
                         let graphObj =graph;
                         let cTimeStamp="2000-05-21T10:25:42.680Z";// check to not regression graph
-                        //mem
-                        console.log(BuildID);
                         Rx.DOM.ajax({ url: `/api/v1/reports/${BuildID}/${type}`, responseType: 'json'})
                               .subscribe(
                                     function (data) {
@@ -482,9 +545,7 @@ html
                   }
                   let openReport = function(build_id,proj,isAudit,reportURL){
 
-                                    // debounce 500 ms
-                                   if(timer) clearTimeout(timer);
-                                    timer = setTimeout(function(){
+
 
                                      //dom manipulate 
                                     $('#tab1').removeClass('active');
@@ -495,14 +556,14 @@ html
                                     $('#btncontinue').addClass("hidden");
                                     //hide feeds
                                     $('.page-quick-sidebar-toggler').click();
-                             
                                                 console.log(isAudit);
                                                 if(isAudit=="true"){
                                                       //select audit mode
                                                       
                                                       $('#Audit').attr("src",reportURL);
                                                       $('#Audit_port').css("visibility", "visible");
-                                                      
+                                                      $('#btnToAudit').removeClass("hidden");
+                                                      $('#Audit').css("display", "block");
                                                 }
                                                 else{
                                                       $('#Audit_port').css("visibility", "hidden");
@@ -511,7 +572,6 @@ html
                                                 }
 
                                     LoadAllGraph(build_id);
-                                    }, 500);
 
                   }
                         //temp	
