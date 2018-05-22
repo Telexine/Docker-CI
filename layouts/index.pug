@@ -239,6 +239,7 @@ html
                                     else{
                                           $('#Audit_port').css("visibility", "hidden");
                                           $('#Audit').css("display", "none");
+                                          $('#btnToAudit').addClass("hidden");
                                     }
                             
 
@@ -392,8 +393,11 @@ html
                                                 cTimeStamp =log.TimeStamp;
                                                 }
                                           });
-                              
-                                    graphObj.update();
+                                          try{
+                                                graphObj.update();
+                                          }catch(e){
+
+                                          };
                                     },
                                     function (error) {
                                     // Log the error
@@ -419,7 +423,7 @@ html
 
 
                                                             let audit = unitTest.audit;
-                                                            let unitTest_id =  unitTest.unitTest_id;
+                                                            let unitTest_id =  unitTest._id;
                                                             let buildPath = unitTest.path;
                                                             let ts =  unitTest.TimeStamp;
                                                             let projectname =  unitTest.proj_name;
@@ -427,9 +431,10 @@ html
                                                 }
                                           );
                                           //sort form new to old 
-                                          $('li').each(function() {
-                                                      $(this).parent().prepend(this);
+                                          $("ul .feeds").children().each(function() {
+                                                $(this).parent().prepend(this);
                                           });
+                                          $('#feedsBadge').text($(".feeds").children().length);
                                     },
                                     function (error) {
                                     // Log the error
@@ -441,7 +446,7 @@ html
                   
                   let appendSidebar = function(isAudit,projectname,unitTest_id,buildPath,user_id,timeStamp){
                               let reportURL =buildPath.replace("uploads/project/testing/","report/")+"report.html";
-                              console.log(reportURL);
+                              //console.log(unitTest_id);
                               
                               let ele = `
                               <li>
@@ -451,7 +456,7 @@ html
                                           <div class="label label-sm label-info"><i class="fa fa-check"></i></div>
                                     </div>
                                     <div class="cont-col2">
-                                          <div class="desc"><span style="font-size:10px">Project : </span>${projectname}<br> <span href="javascript;" class="label label-sm label-warning sidebarbadges" >report page<i class="fa fa-share"></i></span>
+                                          <div class="desc"><span style="font-size:10px">Project : </span>${projectname}<br> <span onClick="openReport('${unitTest_id}','${projectname}','${isAudit}','${reportURL}')" class="label label-sm label-warning sidebarbadges" >report page<i class="fa fa-share"></i></span>
                                           ${isAudit? `<br><span onClick="openInNewTab('${reportURL}')" class="label label-sm label-danger sidebarbadges">Audited Page<i class="fa fa-share"></i></span>
                                           </div>`:""}
                                           
@@ -475,7 +480,40 @@ html
                   let clearSidebar= function(){
                         $('.list-items').empty();
                   }
+                  let openReport = function(build_id,proj,isAudit,reportURL){
 
+                                    // debounce 500 ms
+                                   if(timer) clearTimeout(timer);
+                                    timer = setTimeout(function(){
+
+                                     //dom manipulate 
+                                    $('#tab1').removeClass('active');
+                                    $('#tab4').addClass('active');
+                                    $(".nav-pills").addClass("hidden");
+                                    $("#bar").addClass("hidden");
+                                    $("#titePage").text("Project: "+proj);
+                                    $('#btncontinue').addClass("hidden");
+                                    //hide feeds
+                                    $('.page-quick-sidebar-toggler').click();
+                             
+                                                console.log(isAudit);
+                                                if(isAudit=="true"){
+                                                      //select audit mode
+                                                      
+                                                      $('#Audit').attr("src",reportURL);
+                                                      $('#Audit_port').css("visibility", "visible");
+                                                      
+                                                }
+                                                else{
+                                                      $('#Audit_port').css("visibility", "hidden");
+                                                      $('#Audit').css("display", "none");
+                                                      $('#btnToAudit').addClass("hidden");
+                                                }
+
+                                    LoadAllGraph(build_id);
+                                    }, 500);
+
+                  }
                         //temp	
                   function newDate(days) {
                         return moment().add(days, 'd').toDate();
@@ -484,7 +522,7 @@ html
                   function newDateString(days) {
                         return moment().add(days, 'd').format();
                   }
-
+ 
                   // FirebaseUI config. for auth login
 
                     // Initialize Firebase

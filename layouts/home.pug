@@ -47,7 +47,7 @@ html
 							.portlet-title
 								.caption
 									i.icon-layers.font-red
-									span.caption-subject.font-red.bold.uppercase
+									span#titePage.caption-subject.font-red.bold.uppercase
 										| Ci Wizard -
 										span.step-title  Step 1 of 4 
 							.portlet-body.form
@@ -206,7 +206,7 @@ html
 					span.sr-only Toggle Quick Sidebar
 					i.icon-logout
 					.quick-sidebar-notification
-						span.badge.badge-danger 0
+						span#feedsBadge.badge.badge-danger 0
 				// END QUICK SIDEBAR TOGGLER
 				a.go2top(href='#index')
 					i.icon-arrow-up
@@ -221,11 +221,10 @@ html
 					li.active
 						a(href='javascript:;', data-target='#quick_sidebar_tab_2', data-toggle='tab')
 							| Report
-							span.badge.badge-success 0
 					#quick_sidebar_tab_2.tab-pane.page-quick-sidebar-alerts
 						.page-quick-sidebar-alerts-list
 							h3.list-heading General
-							ul.feeds.list-items
+								ul.feeds.list-items
 		// END QUICK SIDEBA
 		//
 			if lt IE 9
