@@ -452,15 +452,12 @@ html
                                                                         x: log.TimeStamp,
                                                                         y: log.committed,
                                                       });
-                              
+                                                graphObj.update();
                                                 cTimeStamp =log.TimeStamp;
                                                 }
                                           });
-                                          try{
-                                                graphObj.update();
-                                          }catch(e){
 
-                                          };
+                                        
                                     },
                                     function (error) {
                                     // Log the error
@@ -556,7 +553,6 @@ html
                                     $('#btncontinue').addClass("hidden");
                                     //hide feeds
                                     $('.page-quick-sidebar-toggler').click();
-                                                console.log(isAudit);
                                                 if(isAudit=="true"){
                                                       //select audit mode
                                                       
