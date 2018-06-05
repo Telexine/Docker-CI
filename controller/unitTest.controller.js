@@ -159,13 +159,13 @@ module.exports ={
                 ev.sendEvent('end', function () {
                   
                   ev.removeEvent();
-                  try{
+                 
                   return 'child process exited with code ' + code.toString();
                 
-                    }catch(e){
+             
                       return"exit";
             
-                    } 
+                     
                   });
               
                 }  });
@@ -216,7 +216,7 @@ module.exports ={
             thisPath = "uploads/project/"+filename;
             thisTestPath = "uploads/project/testing/"+filename.replace(".zip","");
             if(stdout.replace(/(\r\n\t|\n|\r\t)/gm,"").includes(filename)){
-                cmd = 'unzip '+ thisPath+" -d "+ thisTestPath ;
+                cmd = 'unzip -j '+ thisPath+" -d "+ thisTestPath ;
 
                 exec(cmd ,
                 (error, stdout, stderr) => {
